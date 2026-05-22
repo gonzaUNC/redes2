@@ -28,868 +28,211 @@
     --text: #e2e2f2;
     --text2: #a0a0c8;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
-  }
-
-  /* AMBIENT GLOW */
-  .ambient {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-    z-index: 0;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+  .ambient { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
   .ambient-1 { width: 600px; height: 600px; background: rgba(139,92,246,0.06); top: -200px; left: -200px; }
   .ambient-2 { width: 500px; height: 500px; background: rgba(34,211,238,0.04); bottom: -150px; right: -100px; }
   .ambient-3 { width: 400px; height: 400px; background: rgba(240,171,252,0.03); top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
   /* SIDEBAR */
-  #sidebar {
-    position: fixed;
-    left: 0; top: 0; bottom: 0;
-    width: 280px;
-    background: rgba(13,13,26,0.95);
-    border-right: 1px solid var(--border);
-    backdrop-filter: blur(20px);
-    z-index: 100;
-    overflow-y: auto;
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    display: flex;
-    flex-direction: column;
-  }
-
+  #sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: rgba(13,13,26,0.95); border-right: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 100; overflow-y: auto; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
   #sidebar::-webkit-scrollbar { width: 4px; }
   #sidebar::-webkit-scrollbar-track { background: transparent; }
   #sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  .sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
+  .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--violet2), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+  .sidebar-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white3); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .sidebar-section { padding: 16px 0 8px; }
+  .sidebar-section-label { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--white3); padding: 0 24px 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 24px; cursor: pointer; transition: all 0.2s; font-size: 13px; color: var(--text2); border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--white); background: rgba(139,92,246,0.08); border-left-color: var(--violet); }
+  .nav-item.active { color: var(--violet2); background: rgba(139,92,246,0.12); border-left-color: var(--violet); }
+  .nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+  .nav-badge { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 9px; padding: 2px 6px; border-radius: 20px; background: rgba(139,92,246,0.2); color: var(--violet3); flex-shrink: 0; }
+  .nav-badge.special { background: rgba(34,211,238,0.15); color: var(--cyan2); }
+  .sidebar-special { margin: 8px 16px; border-radius: 10px; border: 1px solid rgba(34,211,238,0.25); background: rgba(34,211,238,0.04); overflow: hidden; }
+  .sidebar-special .nav-item { border-left: none; padding: 10px 16px; }
+  .sidebar-special .nav-item:hover { background: rgba(34,211,238,0.08); border-left: none; }
+  .sidebar-special .nav-item.active { background: rgba(34,211,238,0.1); border-left: none; color: var(--cyan2); }
+  .sidebar-special-label { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); padding: 10px 16px 6px; display: flex; align-items: center; gap: 6px; }
+  .sidebar-special-label::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 8px var(--cyan); }
 
-  .sidebar-header {
-    padding: 28px 24px 20px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-
-  .sidebar-logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--violet2), var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
-  }
-
-  .sidebar-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--white3);
-    margin-top: 4px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .sidebar-section {
-    padding: 16px 0 8px;
-  }
-
-  .sidebar-section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--white3);
-    padding: 0 24px 8px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 13px;
-    color: var(--text2);
-    border-left: 2px solid transparent;
-    position: relative;
-  }
-
-  .nav-item:hover {
-    color: var(--white);
-    background: rgba(139,92,246,0.08);
-    border-left-color: var(--violet);
-  }
-
-  .nav-item.active {
-    color: var(--violet2);
-    background: rgba(139,92,246,0.12);
-    border-left-color: var(--violet);
-  }
-
-  .nav-item .nav-icon {
-    font-size: 14px;
-    width: 18px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .nav-badge {
-    margin-left: auto;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 20px;
-    background: rgba(139,92,246,0.2);
-    color: var(--violet3);
-    flex-shrink: 0;
-  }
-
-  .nav-badge.special {
-    background: rgba(34,211,238,0.15);
-    color: var(--cyan2);
-  }
-
-  /* SPECIAL SECTION */
-  .sidebar-special {
-    margin: 8px 16px;
-    border-radius: 10px;
-    border: 1px solid rgba(34,211,238,0.25);
-    background: rgba(34,211,238,0.04);
-    overflow: hidden;
-  }
-
-  .sidebar-special .nav-item {
-    border-left: none;
-    padding: 10px 16px;
-  }
-
-  .sidebar-special .nav-item:hover {
-    background: rgba(34,211,238,0.08);
-    border-left: none;
-  }
-
-  .sidebar-special .nav-item.active {
-    background: rgba(34,211,238,0.1);
-    border-left: none;
-    color: var(--cyan2);
-  }
-
-  .sidebar-special-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--cyan);
-    padding: 10px 16px 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .sidebar-special-label::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--cyan);
-  }
-
-  /* MAIN CONTENT */
-  #main {
-    margin-left: 280px;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* PAGES */
+  /* MAIN */
+  #main { margin-left: 280px; min-height: 100vh; position: relative; z-index: 1; }
   .page { display: none; }
   .page.active { display: block; }
 
   /* HERO */
-  .hero {
-    padding: 70px 60px 50px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
+  .hero { padding: 70px 60px 50px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero::after { content: ''; position: absolute; top: 0; right: 0; width: 500px; height: 100%; background: radial-gradient(ellipse at right top, rgba(139,92,246,0.12), transparent 70%); pointer-events: none; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--violet3); border: 1px solid var(--border2); padding: 5px 12px; border-radius: 20px; background: rgba(139,92,246,0.08); margin-bottom: 20px; }
+  .hero-tag::before { content: '●'; font-size: 7px; color: var(--violet); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; letter-spacing: -2px; }
+  .hero h1 .grad { background: linear-gradient(135deg, var(--white) 30%, var(--violet2) 70%, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-desc { font-size: 16px; color: var(--text2); max-width: 560px; line-height: 1.8; }
+  .hero-stats { display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat-n { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--violet2), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--white3); font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
 
-  .hero::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 500px; height: 100%;
-    background: radial-gradient(ellipse at right top, rgba(139,92,246,0.12), transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--violet3);
-    border: 1px solid var(--border2);
-    padding: 5px 12px;
-    border-radius: 20px;
-    background: rgba(139,92,246,0.08);
-    margin-bottom: 20px;
-  }
-
-  .hero-tag::before {
-    content: '●';
-    font-size: 7px;
-    color: var(--violet);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 52px;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 16px;
-    letter-spacing: -2px;
-  }
-
-  .hero h1 .grad {
-    background: linear-gradient(135deg, var(--white) 30%, var(--violet2) 70%, var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-desc {
-    font-size: 16px;
-    color: var(--text2);
-    max-width: 560px;
-    line-height: 1.8;
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 40px;
-    margin-top: 40px;
-    flex-wrap: wrap;
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .stat-n {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--violet2), var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--white3);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.5px;
-  }
-
-  /* CONTENT AREA */
-  .content {
-    padding: 48px 60px;
-  }
-
-  /* SECTION TITLE */
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .section-title .icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    background: rgba(139,92,246,0.15);
-    border: 1px solid var(--border2);
-    flex-shrink: 0;
-  }
-
-  .section-sub {
-    color: var(--text2);
-    font-size: 14px;
-    margin-bottom: 36px;
-    padding-left: 54px;
-  }
+  /* CONTENT */
+  .content { padding: 48px 60px; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 14px; }
+  .section-title .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(139,92,246,0.15); border: 1px solid var(--border2); flex-shrink: 0; }
+  .section-sub { color: var(--text2); font-size: 14px; margin-bottom: 36px; padding-left: 54px; }
 
   /* CARDS GRID */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  /* TOPIC CARD */
-  .topic-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-    position: relative;
-  }
-
-  .topic-card:hover {
-    border-color: var(--violet);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(139,92,246,0.15);
-  }
-
-  .topic-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--violet), var(--cyan));
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  .topic-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.25s cubic-bezier(0.4,0,0.2,1); position: relative; }
+  .topic-card:hover { border-color: var(--violet); transform: translateY(-2px); box-shadow: 0 8px 40px rgba(139,92,246,0.15); }
+  .topic-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--violet), var(--cyan)); opacity: 0; transition: opacity 0.25s; }
   .topic-card:hover::before { opacity: 1; }
-
-  .card-header {
-    padding: 22px 24px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .card-icon {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-    background: rgba(139,92,246,0.1);
-    border: 1px solid rgba(139,92,246,0.25);
-  }
-
+  .card-header { padding: 22px 24px 16px; display: flex; align-items: flex-start; gap: 14px; }
+  .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); }
   .card-meta { flex: 1; min-width: 0; }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.3;
-    margin-bottom: 4px;
-  }
-
-  .card-subtitle {
-    font-size: 12px;
-    color: var(--white3);
-    font-family: 'Space Mono', monospace;
-  }
-
-  .card-body {
-    padding: 0 24px 20px;
-    font-size: 13.5px;
-    color: var(--text2);
-    line-height: 1.7;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 0 24px 20px;
-  }
-
-  .tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    border: 1px solid;
-  }
-
+  .card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--white); line-height: 1.3; margin-bottom: 4px; }
+  .card-subtitle { font-size: 12px; color: var(--white3); font-family: 'Space Mono', monospace; }
+  .card-body { padding: 0 24px 20px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 24px 20px; }
+  .tag { font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 9px; border-radius: 20px; border: 1px solid; }
   .tag-violet { color: var(--violet3); border-color: rgba(139,92,246,0.3); background: rgba(139,92,246,0.08); }
   .tag-cyan { color: var(--cyan2); border-color: rgba(34,211,238,0.3); background: rgba(34,211,238,0.08); }
   .tag-pink { color: var(--pink); border-color: rgba(240,171,252,0.3); background: rgba(240,171,252,0.08); }
   .tag-green { color: var(--green); border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
   .tag-yellow { color: var(--yellow); border-color: rgba(253,230,138,0.3); background: rgba(253,230,138,0.08); }
 
-  /* EXPANDED DETAIL VIEW */
-  .detail-view {
-    display: none;
-    animation: fadeSlide 0.3s ease;
-  }
-
+  /* DETAIL */
+  .detail-view { display: none; animation: fadeSlide 0.3s ease; }
   .detail-view.active { display: block; }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .detail-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--violet3);
-    cursor: pointer;
-    padding: 8px 0;
-    margin-bottom: 28px;
-    transition: all 0.2s;
-    border: none;
-    background: none;
-  }
-
+  @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .detail-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--violet3); cursor: pointer; padding: 8px 0; margin-bottom: 28px; transition: all 0.2s; border: none; background: none; }
   .detail-back:hover { color: var(--cyan); }
+  .detail-hero { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .detail-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--violet), var(--cyan), var(--pink)); }
+  .detail-hero-icon { font-size: 36px; margin-bottom: 16px; }
+  .detail-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; background: linear-gradient(135deg, var(--white), var(--violet2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .detail-intro { color: var(--text2); font-size: 15px; line-height: 1.8; max-width: 700px; }
 
-  .detail-hero {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 40px;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .detail-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--violet), var(--cyan), var(--pink));
-  }
-
-  .detail-hero-icon {
-    font-size: 36px;
-    margin-bottom: 16px;
-  }
-
-  .detail-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, var(--white), var(--violet2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .detail-intro {
-    color: var(--text2);
-    font-size: 15px;
-    line-height: 1.8;
-    max-width: 700px;
-  }
-
-  /* CONTENT BLOCKS */
-  .block {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-
-  .block-header {
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-    border-bottom: 1px solid transparent;
-    transition: all 0.2s;
-  }
-
+  /* BLOCKS — fixed toggle */
+  .block { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+  .block-header { padding: 18px 24px; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; border-bottom: 1px solid transparent; transition: all 0.2s; }
   .block-header:hover { background: rgba(139,92,246,0.05); }
-
-  .block.open .block-header { border-bottom-color: var(--border); }
-
-  .block-icon {
-    font-size: 16px;
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(139,92,246,0.1);
-    flex-shrink: 0;
-  }
-
-  .block-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    flex: 1;
-  }
-
-  .block-arrow {
-    color: var(--white3);
-    font-size: 12px;
-    transition: transform 0.3s;
-    font-family: 'Space Mono', monospace;
-  }
-
-  .block.open .block-arrow { transform: rotate(180deg); }
-
-  .block-body {
-    display: none;
-    padding: 24px;
-    font-size: 14.5px;
-    line-height: 1.8;
-    color: var(--text2);
-  }
-
-  .block.open .block-body { display: block; }
-
+  .block.open > .block-header { border-bottom-color: var(--border); }
+  .block-icon { font-size: 16px; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(139,92,246,0.1); flex-shrink: 0; }
+  .block-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; flex: 1; }
+  .block-arrow { color: var(--white3); font-size: 12px; transition: transform 0.3s; font-family: 'Space Mono', monospace; }
+  .block.open > .block-header .block-arrow { transform: rotate(180deg); }
+  .block-body { display: none; padding: 24px; font-size: 14.5px; line-height: 1.8; color: var(--text2); }
+  .block.open > .block-body { display: block; }
   .block-body p { margin-bottom: 14px; }
   .block-body p:last-child { margin-bottom: 0; }
-
   .block-body strong { color: var(--white); font-weight: 600; }
-
   .block-body em { color: var(--violet3); font-style: normal; }
 
-  /* DEFINITION */
-  .def-box {
-    background: rgba(139,92,246,0.07);
-    border: 1px solid rgba(139,92,246,0.2);
-    border-left: 3px solid var(--violet);
-    border-radius: 0 10px 10px 0;
-    padding: 16px 20px;
-    margin: 16px 0;
-    font-size: 14px;
-  }
-
-  .def-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--violet3);
-    margin-bottom: 8px;
-  }
-
-  /* INFO BOX */
-  .info-box {
-    background: rgba(34,211,238,0.05);
-    border: 1px solid rgba(34,211,238,0.2);
-    border-left: 3px solid var(--cyan);
-    border-radius: 0 10px 10px 0;
-    padding: 16px 20px;
-    margin: 16px 0;
-    font-size: 14px;
-  }
-
-  .info-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--cyan2);
-    margin-bottom: 8px;
-  }
-
-  /* WARNING BOX */
-  .warn-box {
-    background: rgba(253,230,138,0.05);
-    border: 1px solid rgba(253,230,138,0.2);
-    border-left: 3px solid var(--yellow);
-    border-radius: 0 10px 10px 0;
-    padding: 16px 20px;
-    margin: 16px 0;
-    font-size: 14px;
-  }
-
-  .warn-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--yellow);
-    margin-bottom: 8px;
-  }
+  /* BOXES */
+  .def-box { background: rgba(139,92,246,0.07); border: 1px solid rgba(139,92,246,0.2); border-left: 3px solid var(--violet); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+  .def-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--violet3); margin-bottom: 8px; }
+  .info-box { background: rgba(34,211,238,0.05); border: 1px solid rgba(34,211,238,0.2); border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+  .info-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan2); margin-bottom: 8px; }
+  .warn-box { background: rgba(253,230,138,0.05); border: 1px solid rgba(253,230,138,0.2); border-left: 3px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+  .warn-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px; }
+  .ok-box { background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+  .ok-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
 
   /* TABLE */
-  .styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 13.5px;
-  }
-
-  .styled-table th {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 10px 14px;
-    text-align: left;
-    color: var(--violet3);
-    border-bottom: 1px solid var(--border2);
-    background: rgba(139,92,246,0.06);
-  }
-
-  .styled-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(139,92,246,0.08);
-    color: var(--text2);
-    vertical-align: top;
-  }
-
+  .styled-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13.5px; }
+  .styled-table th { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 14px; text-align: left; color: var(--violet3); border-bottom: 1px solid var(--border2); background: rgba(139,92,246,0.06); }
+  .styled-table td { padding: 10px 14px; border-bottom: 1px solid rgba(139,92,246,0.08); color: var(--text2); vertical-align: top; }
   .styled-table tr:last-child td { border-bottom: none; }
   .styled-table tr:hover td { background: rgba(139,92,246,0.04); color: var(--text); }
 
-  /* LIST */
-  .block-body ul, .block-body ol {
-    padding-left: 20px;
-    margin: 10px 0;
-  }
-
-  .block-body li {
-    margin-bottom: 8px;
-    color: var(--text2);
-  }
-
+  /* LISTS */
+  .block-body ul, .block-body ol { padding-left: 20px; margin: 10px 0; }
+  .block-body li { margin-bottom: 8px; color: var(--text2); }
   .block-body li::marker { color: var(--violet); }
 
   /* FORMULA */
-  .formula {
-    font-family: 'Space Mono', monospace;
-    background: rgba(13,13,26,0.8);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 14px 20px;
-    margin: 14px 0;
-    font-size: 13px;
-    color: var(--cyan2);
-    overflow-x: auto;
-  }
+  .formula { font-family: 'Space Mono', monospace; background: rgba(13,13,26,0.8); border: 1px solid var(--border2); border-radius: 10px; padding: 14px 20px; margin: 14px 0; font-size: 13px; color: var(--cyan2); overflow-x: auto; white-space: pre; }
 
-  /* STEP LIST */
-  .steps {
-    counter-reset: step;
-    list-style: none;
-    padding: 0;
-    margin: 14px 0;
-  }
+  /* STEPS */
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 14px 0; }
+  .steps li { counter-increment: step; display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+  .steps li::before { content: counter(step); flex-shrink: 0; width: 26px; height: 26px; background: rgba(139,92,246,0.2); border: 1px solid var(--border2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: var(--violet2); margin-top: 1px; }
 
-  .steps li {
-    counter-increment: step;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
-
-  .steps li::before {
-    content: counter(step);
-    flex-shrink: 0;
-    width: 26px; height: 26px;
-    background: rgba(139,92,246,0.2);
-    border: 1px solid var(--border2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--violet2);
-    margin-top: 1px;
-  }
-
-  /* COMPARISON GRID */
-  .compare-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin: 14px 0;
-  }
-
-  .compare-col {
-    background: rgba(13,13,26,0.5);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  .compare-col-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--violet2);
-  }
-
+  /* COMPARE GRID */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .compare-col { background: rgba(13,13,26,0.5); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .compare-col-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: var(--violet2); }
   .compare-col.cyan .compare-col-title { color: var(--cyan2); }
+  .compare-col ul { padding-left: 16px; margin: 0; }
+  .compare-col li { font-size: 13px; margin-bottom: 6px; }
 
-  .compare-col ul {
-    padding-left: 16px;
-    margin: 0;
-  }
-
-  .compare-col li {
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
-
-  /* PROGRESS / SPECIAL SECTION STYLES */
-  .special-hero {
-    background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(139,92,246,0.08));
-    border: 1px solid rgba(34,211,238,0.25);
-  }
-
-  .special-hero .detail-title {
-    background: linear-gradient(135deg, var(--cyan), var(--violet2));
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-
-  .placeholder-card {
-    background: var(--card);
-    border: 2px dashed rgba(34,211,238,0.3);
-    border-radius: 16px;
-    padding: 48px;
-    text-align: center;
-    color: var(--white3);
-  }
-
-  .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
-
-  .placeholder-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--white2);
-    margin-bottom: 10px;
-  }
-
-  .placeholder-text { font-size: 14px; line-height: 1.7; color: var(--white3); max-width: 480px; margin: 0 auto; }
-
-  /* HAMBURGER */
-  #toggle-sidebar {
-    display: none;
-    position: fixed;
-    top: 16px; left: 16px;
-    z-index: 200;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    width: 44px; height: 44px;
-    align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--violet2);
-  }
+  /* SPECIAL */
+  .special-hero { background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(34,211,238,0.25); }
+  .special-hero .detail-title { background: linear-gradient(135deg, var(--cyan), var(--violet2)); -webkit-background-clip: text; background-clip: text; }
 
   /* OVERVIEW GRID */
-  .overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .ov-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ov-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 80px; height: 80px;
-    background: radial-gradient(ellipse at bottom right, rgba(139,92,246,0.12), transparent 70%);
-  }
-
-  .ov-card:hover {
-    border-color: var(--violet);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(139,92,246,0.12);
-  }
-
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .ov-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+  .ov-card::after { content: ''; position: absolute; bottom: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(ellipse at bottom right, rgba(139,92,246,0.12), transparent 70%); }
+  .ov-card:hover { border-color: var(--violet); transform: translateY(-2px); box-shadow: 0 6px 30px rgba(139,92,246,0.12); }
   .ov-icon { font-size: 28px; margin-bottom: 12px; }
-
-  .ov-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-
+  .ov-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
   .ov-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
-
-  .ov-arrow {
-    position: absolute;
-    top: 20px; right: 20px;
-    color: var(--white3);
-    font-size: 12px;
-    transition: all 0.2s;
-  }
-
+  .ov-arrow { position: absolute; top: 20px; right: 20px; color: var(--white3); font-size: 12px; transition: all 0.2s; }
   .ov-card:hover .ov-arrow { color: var(--violet2); transform: translate(2px,-2px); }
+
+  /* QUIZ (modelo parcial) */
+  .quiz-q { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 20px; overflow: hidden; }
+  .quiz-q-header { padding: 16px 22px; display: flex; align-items: flex-start; gap: 12px; }
+  .quiz-num { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: var(--violet3); background: rgba(139,92,246,0.15); border: 1px solid var(--border2); border-radius: 6px; padding: 3px 8px; flex-shrink: 0; margin-top: 2px; }
+  .quiz-text { font-size: 14px; color: var(--white); line-height: 1.6; flex: 1; }
+  .quiz-options { padding: 0 22px 16px 52px; display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+  .quiz-opt:hover { border-color: var(--violet); background: rgba(139,92,246,0.06); }
+  .quiz-opt.correct { border-color: var(--green); background: rgba(74,222,128,0.08); color: var(--green); }
+  .quiz-opt.wrong { border-color: rgba(248,113,113,0.5); background: rgba(248,113,113,0.06); color: rgba(248,113,113,0.9); }
+  .quiz-opt.revealed-correct { border-color: var(--green); background: rgba(74,222,128,0.08); color: var(--green); }
+  .opt-letter { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; width: 18px; flex-shrink: 0; margin-top: 1px; }
+  .quiz-explain { margin: 0 22px 16px 52px; padding: 12px 16px; background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.2); border-radius: 8px; font-size: 13px; color: var(--text2); display: none; }
+  .quiz-explain.visible { display: block; }
+  .quiz-explain strong { color: var(--green); }
+  .quiz-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 9px; padding: 2px 8px; border-radius: 20px; margin-left: 8px; }
+  .badge-transport { background: rgba(139,92,246,0.15); color: var(--violet3); border: 1px solid rgba(139,92,246,0.3); }
+  .badge-enlace { background: rgba(34,211,238,0.1); color: var(--cyan2); border: 1px solid rgba(34,211,238,0.25); }
+  .score-bar { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 28px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .score-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white3); }
+  .score-val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--violet2), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .score-reset { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white3); cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: none; transition: all 0.2s; }
+  .score-reset:hover { border-color: var(--violet); color: var(--violet3); }
+
+  /* EJERCICIOS GUIA */
+  .ej-block { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+  .ej-header { padding: 18px 24px; display: flex; align-items: flex-start; gap: 14px; cursor: pointer; border-bottom: 1px solid transparent; transition: all 0.2s; }
+  .ej-header:hover { background: rgba(139,92,246,0.05); }
+  .ej-block.open > .ej-header { border-bottom-color: var(--border); }
+  .ej-num { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; background: rgba(139,92,246,0.2); color: var(--violet3); border: 1px solid var(--border2); border-radius: 8px; padding: 4px 10px; flex-shrink: 0; margin-top: 2px; }
+  .ej-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); flex: 1; line-height: 1.4; }
+  .ej-arrow { color: var(--white3); font-size: 12px; transition: transform 0.3s; font-family: 'Space Mono', monospace; flex-shrink: 0; margin-top: 4px; }
+  .ej-block.open > .ej-header .ej-arrow { transform: rotate(180deg); }
+  .ej-body { display: none; padding: 24px; font-size: 14px; line-height: 1.8; color: var(--text2); }
+  .ej-block.open > .ej-body { display: block; }
+  .ej-enunciado { background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.15); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13.5px; color: var(--white2); font-style: italic; }
+  .ej-section { margin-top: 16px; }
+  .ej-section-title { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan2); margin-bottom: 10px; }
+  .ej-body p { margin-bottom: 12px; }
+  .ej-body ul { padding-left: 18px; margin: 10px 0; }
+  .ej-body li { margin-bottom: 7px; }
+  .ej-body li::marker { color: var(--violet); }
+  .ej-body strong { color: var(--white); }
+  .ej-body em { color: var(--violet3); font-style: normal; }
+
+  /* HAMBURGER */
+  #toggle-sidebar { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; background: var(--card); border: 1px solid var(--border); border-radius: 10px; width: 44px; height: 44px; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; color: var(--violet2); }
 
   @media (max-width: 1024px) {
     #sidebar { transform: translateX(-100%); }
@@ -912,81 +255,41 @@
 
 <button id="toggle-sidebar" onclick="toggleSidebar()">☰</button>
 
-<!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-logo">REDES 2025</div>
     <div class="sidebar-sub">Guía de Estudio · Parcial</div>
   </div>
-
   <div class="sidebar-section">
     <div class="sidebar-section-label">Vista General</div>
-    <div class="nav-item active" onclick="showPage('home')">
-      <span class="nav-icon">⊞</span> Inicio
-    </div>
+    <div class="nav-item active" onclick="showPage('home')"><span class="nav-icon">⊞</span> Inicio</div>
   </div>
-
   <div class="sidebar-section">
     <div class="sidebar-section-label">Capa de Enlace</div>
-    <div class="nav-item" onclick="showPage('enlace')">
-      <span class="nav-icon">🔗</span> Tramas y Ethernet
-      <span class="nav-badge">1</span>
-    </div>
-    <div class="nav-item" onclick="showPage('wifi')">
-      <span class="nav-icon">📡</span> IEEE 802.11 (WiFi)
-      <span class="nav-badge">2</span>
-    </div>
+    <div class="nav-item" onclick="showPage('enlace')"><span class="nav-icon">🔗</span> Tramas y Ethernet<span class="nav-badge">1</span></div>
+    <div class="nav-item" onclick="showPage('wifi')"><span class="nav-icon">📡</span> IEEE 802.11 (WiFi)<span class="nav-badge">2</span></div>
   </div>
-
   <div class="sidebar-section">
     <div class="sidebar-section-label">Capa de Transporte</div>
-    <div class="nav-item" onclick="showPage('flujo')">
-      <span class="nav-icon">🌊</span> Control de Flujo
-      <span class="nav-badge">3</span>
-    </div>
-    <div class="nav-item" onclick="showPage('congestion')">
-      <span class="nav-icon">⚡</span> Control de Congestión
-      <span class="nav-badge">4</span>
-    </div>
-    <div class="nav-item" onclick="showPage('duplicados')">
-      <span class="nav-icon">🔄</span> Duplicados Retrasados
-      <span class="nav-badge">5</span>
-    </div>
+    <div class="nav-item" onclick="showPage('flujo')"><span class="nav-icon">🌊</span> Control de Flujo<span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="showPage('congestion')"><span class="nav-icon">⚡</span> Control de Congestión<span class="nav-badge">4</span></div>
+    <div class="nav-item" onclick="showPage('duplicados')"><span class="nav-icon">🔄</span> Duplicados Retrasados<span class="nav-badge">5</span></div>
   </div>
-
   <div class="sidebar-section">
     <div class="sidebar-section-label">Capa de Red / Interredes</div>
-    <div class="nav-item" onclick="showPage('interredes')">
-      <span class="nav-icon">🌐</span> Org. y Reenvío
-      <span class="nav-badge">6</span>
-    </div>
-    <div class="nav-item" onclick="showPage('ospf')">
-      <span class="nav-icon">🗺️</span> WAN Jerárquica y OSPF
-      <span class="nav-badge">7</span>
-    </div>
-    <div class="nav-item" onclick="showPage('bgp')">
-      <span class="nav-icon">🛰️</span> Enrutamiento BGP
-      <span class="nav-badge">8</span>
-    </div>
+    <div class="nav-item" onclick="showPage('interredes')"><span class="nav-icon">🌐</span> Org. y Reenvío<span class="nav-badge">6</span></div>
+    <div class="nav-item" onclick="showPage('ospf')"><span class="nav-icon">🗺️</span> WAN Jerárquica y OSPF<span class="nav-badge">7</span></div>
+    <div class="nav-item" onclick="showPage('bgp')"><span class="nav-icon">🛰️</span> Enrutamiento BGP<span class="nav-badge">8</span></div>
   </div>
-
-  <!-- GUIA PRACTICA -->
   <div class="sidebar-section">
     <div class="sidebar-special">
       <div class="sidebar-special-label">Práctica & Examen</div>
-      <div class="nav-item" onclick="showPage('guia-practica')">
-        <span class="nav-icon">📝</span> Guía Práctica
-        <span class="nav-badge special">GP</span>
-      </div>
-      <div class="nav-item" onclick="showPage('modelo-parcial')">
-        <span class="nav-icon">🎯</span> Modelo de Parcial
-        <span class="nav-badge special">MP</span>
-      </div>
+      <div class="nav-item" onclick="showPage('guia-practica')"><span class="nav-icon">📝</span> Guía Práctica<span class="nav-badge special">GP</span></div>
+      <div class="nav-item" onclick="showPage('modelo-parcial')"><span class="nav-icon">🎯</span> Modelo de Parcial<span class="nav-badge special">MP</span></div>
     </div>
   </div>
 </nav>
 
-<!-- MAIN -->
 <main id="main">
 
   <!-- HOME -->
@@ -994,65 +297,25 @@
     <div class="hero">
       <div class="hero-tag">Sistema de Estudio Interactivo</div>
       <h1><span class="grad">Redes &amp;<br>Sistemas Distribuidos</span></h1>
-      <p class="hero-desc">Todos los temas del parcial organizados, expandibles y sin perder el detalle que necesitás para rendir bien. Navegá por el menú lateral o elegí un tema abajo.</p>
+      <p class="hero-desc">Todos los temas del parcial organizados, expandibles y sin perder el detalle. Navegá por el menú o elegí un tema abajo.</p>
       <div class="hero-stats">
         <div class="stat"><div class="stat-n">8</div><div class="stat-label">Temas cubiertos</div></div>
-        <div class="stat"><div class="stat-n">5</div><div class="stat-label">Capas del modelo</div></div>
-        <div class="stat"><div class="stat-n">∞</div><div class="stat-label">Horas de pánico evitadas</div></div>
+        <div class="stat"><div class="stat-n">13</div><div class="stat-label">Ejercicios resueltos</div></div>
+        <div class="stat"><div class="stat-n">10</div><div class="stat-label">Preguntas de parcial</div></div>
       </div>
     </div>
     <div class="content">
       <div class="section-title"><div class="icon">📚</div>Temas del Parcial</div>
       <p class="section-sub">Hacé clic en cualquier tarjeta para ir directo al tema.</p>
       <div class="overview-grid">
-        <div class="ov-card" onclick="showPage('enlace')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🔗</div>
-          <div class="ov-title">Capa de Enlace: Tramas y Ethernet</div>
-          <div class="ov-desc">Tramas, CSMA/CD, hubs vs switches, tamaño mínimo, Ethernet moderno.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('wifi')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">📡</div>
-          <div class="ov-title">IEEE 802.11 (WiFi)</div>
-          <div class="ov-desc">CSMA/CA, DCF, PCF, estación oculta/expuesta, tasa efectiva, WiFi 7.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('flujo')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🌊</div>
-          <div class="ov-title">Control de Flujo</div>
-          <div class="ov-desc">Búferes del receptor, protocolo de créditos, deadlock, TCP rwnd.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('congestion')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">⚡</div>
-          <div class="ov-title">Control de Congestión</div>
-          <div class="ov-desc">AIMD, Slow Start, Tahoe vs Reno, cwnd, ssthresh, BBR.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('duplicados')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🔄</div>
-          <div class="ov-title">Duplicados Retrasados</div>
-          <div class="ov-desc">Espacio de secuencia, tiempo de vida T, ISN aleatorio vs reloj.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('interredes')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🌐</div>
-          <div class="ov-title">Organización y Reenvío</div>
-          <div class="ov-desc">MTU, fragmentación, entunelamiento, agregación de prefijos, jerarquía.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('ospf')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🗺️</div>
-          <div class="ov-title">WAN Jerárquica y OSPF</div>
-          <div class="ov-desc">Áreas, Área 0, enrutadores de borde, Dijkstra modificado, DAG.</div>
-        </div>
-        <div class="ov-card" onclick="showPage('bgp')">
-          <div class="ov-arrow">↗</div>
-          <div class="ov-icon">🛰️</div>
-          <div class="ov-title">Enrutamiento BGP</div>
-          <div class="ov-desc">Sistemas Autónomos, modelo dos niveles, mensajes, RIBs, selección de rutas.</div>
-        </div>
+        <div class="ov-card" onclick="showPage('enlace')"><div class="ov-arrow">↗</div><div class="ov-icon">🔗</div><div class="ov-title">Capa de Enlace: Tramas y Ethernet</div><div class="ov-desc">Tramas, CSMA/CD, hubs vs switches, tamaño mínimo, Ethernet moderno.</div></div>
+        <div class="ov-card" onclick="showPage('wifi')"><div class="ov-arrow">↗</div><div class="ov-icon">📡</div><div class="ov-title">IEEE 802.11 (WiFi)</div><div class="ov-desc">CSMA/CA, DCF, PCF, estación oculta/expuesta, tasa efectiva, WiFi 7.</div></div>
+        <div class="ov-card" onclick="showPage('flujo')"><div class="ov-arrow">↗</div><div class="ov-icon">🌊</div><div class="ov-title">Control de Flujo</div><div class="ov-desc">Búferes del receptor, protocolo de créditos, deadlock, TCP rwnd.</div></div>
+        <div class="ov-card" onclick="showPage('congestion')"><div class="ov-arrow">↗</div><div class="ov-icon">⚡</div><div class="ov-title">Control de Congestión</div><div class="ov-desc">AIMD, Slow Start, Tahoe vs Reno, cwnd, ssthresh, BBR.</div></div>
+        <div class="ov-card" onclick="showPage('duplicados')"><div class="ov-arrow">↗</div><div class="ov-icon">🔄</div><div class="ov-title">Duplicados Retrasados</div><div class="ov-desc">Espacio de secuencia, tiempo de vida T, ISN aleatorio vs reloj.</div></div>
+        <div class="ov-card" onclick="showPage('interredes')"><div class="ov-arrow">↗</div><div class="ov-icon">🌐</div><div class="ov-title">Organización y Reenvío</div><div class="ov-desc">MTU, fragmentación, entunelamiento, agregación de prefijos, jerarquía.</div></div>
+        <div class="ov-card" onclick="showPage('ospf')"><div class="ov-arrow">↗</div><div class="ov-icon">🗺️</div><div class="ov-title">WAN Jerárquica y OSPF</div><div class="ov-desc">Áreas, Área 0, enrutadores de borde, Dijkstra modificado, DAG.</div></div>
+        <div class="ov-card" onclick="showPage('bgp')"><div class="ov-arrow">↗</div><div class="ov-icon">🛰️</div><div class="ov-title">Enrutamiento BGP</div><div class="ov-desc">Sistemas Autónomos, modelo dos niveles, mensajes, RIBs, selección de rutas.</div></div>
       </div>
     </div>
   </div>
@@ -1064,167 +327,56 @@
       <div class="detail-hero">
         <div class="detail-hero-icon">🔗</div>
         <div class="detail-title">Capa de Enlace de Datos</div>
-        <div class="detail-intro">Convierte un canal físico propenso a errores en un servicio de comunicación local ordenado. Opera <strong>salto a salto</strong> entre nodos directamente conectados. Gestiona tramas, errores, acceso al medio y la arquitectura de switches.</div>
+        <div class="detail-intro">Convierte un canal físico propenso a errores en un servicio de comunicación local ordenado. Opera <strong>salto a salto</strong>. Gestiona tramas, errores, acceso al medio y la arquitectura de switches.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📦</div>
-          <div class="block-title">Naturaleza y alcance — ¿Qué hace la capa de enlace?</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📦</div><div class="block-title">Naturaleza y alcance — ¿Qué hace la capa de enlace?</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>La capa de enlace toma el flujo de bits de la capa física y los organiza en unidades llamadas <strong>tramas</strong>. Su operación es estrictamente <em>local</em>: solo se preocupa por entregar la trama al nodo vecino inmediato, sin visión del camino completo.</p>
-          <div class="def-box">
-            <div class="def-label">Definición clave</div>
-            Una <strong>trama</strong> es la unidad de datos de la capa de enlace. Encapsula el paquete de la capa de red, añadiéndole encabezado (con MAC de origen y destino) y un campo de verificación de errores (FCS/CRC).
-          </div>
-          <table class="styled-table">
-            <thead><tr><th>Capa</th><th>Unidad</th><th>Alcance</th><th>Propósito</th></tr></thead>
-            <tbody>
-              <tr><td>Física</td><td>bit/señal</td><td>Medio físico</td><td>Representar bits en el medio</td></tr>
-              <tr><td><strong>Enlace</strong></td><td><strong>trama</strong></td><td><strong>Enlace local</strong></td><td><strong>Entrega salto a salto</strong></td></tr>
-              <tr><td>Red</td><td>paquete</td><td>Extremo a extremo</td><td>Determinar ruta entre routers</td></tr>
-              <tr><td>Transporte</td><td>segmento</td><td>Proceso a proceso</td><td>Servicio a aplicaciones</td></tr>
-            </tbody>
-          </table>
+          <p>La capa de enlace toma el flujo de bits y los organiza en <strong>tramas</strong>. Su operación es estrictamente <em>local</em>: solo se preocupa por entregar la trama al nodo vecino inmediato.</p>
+          <div class="def-box"><div class="def-label">Definición clave</div>Una <strong>trama</strong> es la unidad de datos de la capa de enlace. Encapsula el paquete de red añadiéndole encabezado (MACs) y verificación de errores (FCS/CRC).</div>
+          <table class="styled-table"><thead><tr><th>Capa</th><th>Unidad</th><th>Alcance</th></tr></thead><tbody><tr><td>Física</td><td>bit/señal</td><td>Medio físico</td></tr><tr><td><strong>Enlace</strong></td><td><strong>trama</strong></td><td><strong>Enlace local (salto a salto)</strong></td></tr><tr><td>Red</td><td>paquete</td><td>Extremo a extremo</td></tr><tr><td>Transporte</td><td>segmento</td><td>Proceso a proceso</td></tr></tbody></table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔲</div>
-          <div class="block-title">Formatos de trama — Ethernet II vs IEEE 802.3</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔲</div><div class="block-title">Formatos de trama — Ethernet II vs IEEE 802.3</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Existen dos formatos de trama principales en el mundo Ethernet:</p>
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">Ethernet II / DIX</div>
-              <ul>
-                <li>Campo de 2 bytes: <strong>EtherType</strong></li>
-                <li>Identifica el protocolo superior (IPv4=0x0800, IPv6=0x86DD, ARP=0x0806)</li>
-                <li>Valor ≥ 1536 (0x0600)</li>
-                <li>Más común en la práctica actual</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">IEEE 802.3</div>
-              <ul>
-                <li>Campo de 2 bytes: <strong>Longitud</strong></li>
-                <li>Indica cuántos bytes hay en el campo de datos</li>
-                <li>Valor ≤ 1500</li>
-                <li>Regla práctica: si valor ≤ 1500 → longitud; si ≥ 1536 → tipo</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">Ethernet II / DIX</div><ul><li>Campo de 2 bytes: <strong>EtherType</strong></li><li>Identifica protocolo superior (IPv4=0x0800)</li><li>Valor ≥ 1536 (0x0600)</li><li>Más común en la práctica actual</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">IEEE 802.3</div><ul><li>Campo de 2 bytes: <strong>Longitud</strong></li><li>Indica cuántos bytes hay en el campo de datos</li><li>Valor ≤ 1500</li><li>Si ≤ 1500 → longitud; si ≥ 1536 → tipo</li></ul></div>
           </div>
-          <div class="info-box">
-            <div class="info-label">Estructura de trama Ethernet</div>
-            Preámbulo (7B) | SFD (1B) | MAC Destino (6B) | MAC Origen (6B) | Tipo/Long (2B) | Datos (46-1500B) | FCS (4B)
-          </div>
+          <div class="info-box"><div class="info-label">Estructura de trama Ethernet</div>Preámbulo (7B) | SFD (1B) | MAC Destino (6B) | MAC Origen (6B) | Tipo/Long (2B) | Datos (46-1500B) | FCS (4B)</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">✅</div>
-          <div class="block-title">Control de flujo y confiabilidad en la capa de enlace</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">✅</div><div class="block-title">Control de flujo y confiabilidad en la capa de enlace</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p><strong>Entramado:</strong> delimitar unidades de datos dentro de un flujo continuo de bits, evitando confundir datos con delimitadores.</p>
-          <p><strong>ACK + Timeout:</strong> el emisor pone un temporizador tras enviar una trama. Si el ACK no llega, retransmite. Los <strong>números de secuencia</strong> permiten al receptor descartar duplicados cuando un ACK se pierde en el retorno.</p>
-          <div class="def-box">
-            <div class="def-label">Piggybacking</div>
-            Técnica de optimización: incluir el ACK de confirmación dentro de una trama de datos que va en sentido contrario, ahorrando la transmisión de una trama de control independiente.
-          </div>
-          <p><strong>Control de flujo vs. congestión:</strong> el control de flujo protege al <em>receptor individual</em> de ser desbordado. El control de congestión protege a la <em>red global</em>.</p>
+          <p><strong>Entramado:</strong> delimitar unidades de datos dentro de un flujo de bits.</p>
+          <p><strong>ACK + Timeout:</strong> el emisor pone un temporizador. Si el ACK no llega, retransmite. Los números de secuencia permiten descartar duplicados.</p>
+          <div class="def-box"><div class="def-label">Piggybacking</div>Incluir el ACK de confirmación dentro de una trama de datos que va en sentido contrario, ahorrando una trama de control independiente.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📡</div>
-          <div class="block-title">Protocolos de Acceso Múltiple (MAC) — ALOHA y CSMA</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📡</div><div class="block-title">Protocolos de Acceso Múltiple — ALOHA y CSMA</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>En canales <em>broadcast</em> (medio compartido), la subcapa MAC determina quién puede transmitir y cuándo.</p>
-          <table class="styled-table">
-            <thead><tr><th>Protocolo</th><th>Período Vulnerable</th><th>Throughput máx.</th><th>Descripción</th></tr></thead>
-            <tbody>
-              <tr><td>ALOHA Puro</td><td>2T</td><td><strong>18.4%</strong></td><td>Transmite cuando tiene datos, sin escuchar</td></tr>
-              <tr><td>ALOHA Ranurado</td><td>T</td><td><strong>36.8%</strong></td><td>Divide tiempo en ranuras, duplica throughput</td></tr>
-              <tr><td>CSMA 1-persistente</td><td>&lt; T</td><td>Variable</td><td>Escucha el canal; transmite si libre, espera si ocupado</td></tr>
-              <tr><td>CSMA/CD</td><td>&lt; T</td><td>Alto</td><td>Detecta colisión mientras transmite, aborta y envía jam</td></tr>
-            </tbody>
-          </table>
-          <div class="info-box">
-            <div class="info-label">CSMA/CD — Sequencia en colisión</div>
-            1. Escucha el canal (Carrier Sense)<br>
-            2. Si libre, comienza a transmitir<br>
-            3. Mientras transmite, sigue escuchando (Collision Detection)<br>
-            4. Si detecta colisión → para y envía señal JAM (48 bits)<br>
-            5. Espera tiempo aleatorio (Binary Exponential Backoff) y reintenta
-          </div>
+          <table class="styled-table"><thead><tr><th>Protocolo</th><th>Período Vulnerable</th><th>Throughput máx.</th></tr></thead><tbody><tr><td>ALOHA Puro</td><td>2T</td><td><strong>18.4%</strong></td></tr><tr><td>ALOHA Ranurado</td><td>T</td><td><strong>36.8%</strong></td></tr><tr><td>CSMA 1-persistente</td><td>&lt; T</td><td>Variable</td></tr><tr><td>CSMA/CD</td><td>&lt; T</td><td>Alto</td></tr></tbody></table>
+          <div class="info-box"><div class="info-label">CSMA/CD — Secuencia en colisión</div>1. Escucha el canal (Carrier Sense)<br>2. Si libre, comienza a transmitir<br>3. Sigue escuchando (Collision Detection)<br>4. Si detecta colisión → para y envía JAM (48 bits)<br>5. Espera tiempo aleatorio (Binary Exponential Backoff) y reintenta</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📐</div>
-          <div class="block-title">Tamaño mínimo de trama — La condición de seguridad CSMA/CD</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📐</div><div class="block-title">Tamaño mínimo de trama — Condición de seguridad CSMA/CD</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Para que CSMA/CD funcione, el emisor debe detectar la colisión <em>antes</em> de terminar de transmitir la trama. El peor caso: dos estaciones en extremos opuestos del cable.</p>
-          <div class="def-box">
-            <div class="def-label">Condición de seguridad</div>
-            El tiempo de transmisión de la trama debe ser al menos el doble del tiempo de propagación máximo entre los nodos más alejados.
-          </div>
-          <div class="formula">
-T_tx ≥ 2τ
-donde T_tx = L/R (tiempo de transmisión) y τ = tiempo de propagación máximo
-
-→ L_min ≥ R × 2τ
-
-Ejemplo Ethernet 10 Mbps:
-L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 bytes
-          </div>
-          <div class="warn-box">
-            <div class="warn-label">Relleno (Padding)</div>
-            Si los datos de la aplicación son menos de 46 bytes (el payload mínimo para alcanzar los 64 bytes totales), la capa de enlace agrega bytes de relleno. El receptor los descarta.
-          </div>
+          <div class="def-box"><div class="def-label">Condición de seguridad</div>El tiempo de transmisión de la trama debe ser al menos el doble del tiempo de propagación máximo entre los nodos más alejados: <strong>T_tx ≥ 2τ → L_min ≥ R × 2τ</strong></div>
+          <div class="formula">Ejemplo Ethernet 10 Mbps:
+L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 bytes</div>
+          <div class="warn-box"><div class="warn-label">Relleno (Padding)</div>Si los datos son menos de 46 bytes (payload mínimo para alcanzar 64 bytes totales), la capa de enlace agrega bytes de relleno. El receptor los descarta.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔀</div>
-          <div class="block-title">Hubs vs Switches — La evolución del hardware</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔀</div><div class="block-title">Hubs vs Switches — La evolución del hardware</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <table class="styled-table">
-            <thead><tr><th>Dispositivo</th><th>Capa</th><th>Función</th><th>Impacto</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Hub</strong></td><td>Física</td><td>Repite señales eléctricas a TODOS los puertos</td><td>Un único dominio de colisión compartido, half-duplex obligatorio</td></tr>
-              <tr><td><strong>Switch</strong></td><td>Enlace</td><td>Almacena y reenvía tramas analizando MAC de destino</td><td>Separa dominios de colisión; full-duplex posible; comunicación paralela</td></tr>
-            </tbody>
-          </table>
-          <p><strong>Aprendizaje dinámico del switch:</strong></p>
-          <ul>
-            <li><strong>Aprende:</strong> observa la MAC de <em>origen</em> de cada trama entrante y anota el puerto de llegada en su tabla.</li>
-            <li><strong>Busca:</strong> busca la MAC de <em>destino</em> en la tabla.</li>
-            <li><strong>Reenvía:</strong> si la conoce, envía solo por ese puerto (filtrado).</li>
-            <li><strong>Inunda:</strong> si no la conoce, manda la trama por TODOS los puertos excepto el de entrada (<em>flooding</em>).</li>
-          </ul>
-          <div class="info-box">
-            <div class="info-label">Flooding ≠ Broadcast</div>
-            El flooding es una decisión interna del switch ante desconocimiento de la MAC destino. El broadcast es una solicitud explícita de la trama para llegar a todos (MAC destino = FF:FF:FF:FF:FF:FF).
-          </div>
-          <p><strong>Ethernet moderno:</strong> estándares actuales (IEEE 802.3) van desde 1 Mbit/s hasta <strong>400 Gbit/s</strong>, con proyecciones a 800G y 1.6T. CSMA/CD es hoy un concepto histórico; en redes full-duplex conmutadas no hay colisiones.</p>
+          <table class="styled-table"><thead><tr><th>Dispositivo</th><th>Capa</th><th>Función</th><th>Impacto</th></tr></thead><tbody><tr><td><strong>Hub</strong></td><td>Física</td><td>Repite señales a TODOS los puertos</td><td>Un único dominio de colisión, half-duplex obligatorio</td></tr><tr><td><strong>Switch</strong></td><td>Enlace</td><td>Almacena y reenvía analizando MAC destino</td><td>Separa dominios de colisión; full-duplex posible</td></tr></tbody></table>
+          <p><strong>Aprendizaje dinámico del switch:</strong> observa MAC de <em>origen</em> → aprende el puerto. Si la MAC destino es conocida → reenvía solo por ese puerto. Si no → <em>flooding</em> por todos salvo el de entrada.</p>
+          <div class="info-box"><div class="info-label">Flooding ≠ Broadcast</div>Flooding: decisión interna del switch ante desconocimiento de MAC. Broadcast: solicitud explícita de la trama (MAC destino = FF:FF:FF:FF:FF:FF).</div>
         </div>
       </div>
     </div>
@@ -1237,171 +389,59 @@ L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 by
       <div class="detail-hero">
         <div class="detail-hero-icon">📡</div>
         <div class="detail-title">IEEE 802.11 — WiFi</div>
-        <div class="detail-intro">Opera bajo lógica fundamentalmente distinta a Ethernet. El medio inalámbrico impide detectar colisiones mientras se transmite, por lo que WiFi usa <strong>CSMA/CA</strong> (evitación) en lugar de CSMA/CD (detección). Cada trama de datos requiere ACK explícito del receptor.</div>
+        <div class="detail-intro">Opera bajo lógica fundamentalmente distinta a Ethernet. El medio inalámbrico impide detectar colisiones mientras se transmite, por lo que WiFi usa <strong>CSMA/CA</strong> (evitación). Cada trama de datos requiere ACK explícito del receptor.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🏗️</div>
-          <div class="block-title">Arquitectura — Ad Hoc vs Infraestructura</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🏗️</div><div class="block-title">Arquitectura — Ad Hoc vs Infraestructura</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">Red Ad Hoc (IBSS)</div>
-              <ul>
-                <li>Nodos se comunican directamente entre sí</li>
-                <li>Sin estación base centralizada</li>
-                <li>Modo distribuido puro</li>
-                <li>Puede requerir rutas de múltiples saltos</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">Red con Infraestructura (BSS)</div>
-              <ul>
-                <li>Hosts se asocian a un <strong>Punto de Acceso (AP)</strong></li>
-                <li>AP actúa como puente hacia red cableada</li>
-                <li>Varios BSS conectados = ESS (Extended Service Set)</li>
-                <li>DS (Distribution System) une los APs</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">Red Ad Hoc (IBSS)</div><ul><li>Nodos se comunican directamente</li><li>Sin estación base centralizada</li><li>Modo distribuido puro</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">Red con Infraestructura (BSS)</div><ul><li>Hosts se asocian a un <strong>Punto de Acceso (AP)</strong></li><li>AP actúa como puente hacia red cableada</li><li>Varios BSS conectados = ESS</li></ul></div>
           </div>
-          <table class="styled-table">
-            <thead><tr><th>Término</th><th>Significado</th></tr></thead>
-            <tbody>
-              <tr><td>STA</td><td>Estación inalámbrica (cliente)</td></tr>
-              <tr><td>AP</td><td>Punto de acceso</td></tr>
-              <tr><td>BSS</td><td>Basic Service Set — celda formada por un AP y sus STAs</td></tr>
-              <tr><td>ESS</td><td>Extended Service Set — varios BSS unidos por un DS</td></tr>
-              <tr><td>DS</td><td>Distribution System — red (usualmente cableada) que conecta APs</td></tr>
-              <tr><td>Portal</td><td>Punto de integración con redes no-802.11</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🚫</div>
-          <div class="block-title">¿Por qué no CSMA/CD en WiFi? Las 3 razones</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🚫</div><div class="block-title">¿Por qué no CSMA/CD en WiFi? Las 3 razones</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
           <ol class="steps">
-            <li><strong>Saturación del receptor:</strong> la señal propia transmitida es mucho más fuerte que cualquier señal entrante. No podés "escuchar" interferencias mientras gritás.</li>
+            <li><strong>Saturación del receptor:</strong> la señal propia transmitida es mucho más fuerte que cualquier señal entrante. No podés escuchar interferencias mientras transmitís.</li>
             <li><strong>Diferencia de visión del canal:</strong> lo que escucha el transmisor no es lo que escucha el receptor. El canal inalámbrico no es uniforme.</li>
-            <li><strong>Detección débil:</strong> identificar una colisión débil en el mismo canal mientras se transmite es tecnológicamente complejo y costoso.</li>
+            <li><strong>Detección débil:</strong> identificar una colisión en el mismo canal mientras se transmite es tecnológicamente complejo y costoso.</li>
           </ol>
-          <div class="warn-box">
-            <div class="warn-label">Consecuencia</div>
-            WiFi no puede confirmar si hubo colisión durante la transmisión. Por eso cada trama recibida debe ser confirmada explícitamente con un ACK. Si no llega el ACK, la estación asume colisión o error y retransmite.
-          </div>
+          <div class="warn-box"><div class="warn-label">Consecuencia</div>WiFi no puede confirmar si hubo colisión. Por eso cada trama recibida debe ser confirmada con un ACK. Sin ACK → se asume colisión o error → retransmisión.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">⚙️</div>
-          <div class="block-title">CSMA/CA — Mecanismos de control</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">⚙️</div><div class="block-title">CSMA/CA — Mecanismos de control</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p><strong>Detección Física:</strong> medición directa de la energía en el medio (¿hay señal?)</p>
-          <p><strong>NAV (Network Allocation Vector):</strong> detección virtual. Es un temporizador local que indica cuánto tiempo estará reservado el canal, basado en el campo <em>Duration</em> de las tramas de control escuchadas. Una estación que escucha un RTS o CTS actualiza su NAV y no intenta transmitir hasta que vence.</p>
-          <p><strong>ACKs obligatorios:</strong> cada trama unicast debe ser confirmada por el receptor. Sin ACK = retransmisión.</p>
-          <p><strong>Backoff aleatorio:</strong> antes de transmitir tras detectar el canal libre, la estación espera un tiempo aleatorio (contador que decrece cuando el canal está libre, se congela cuando está ocupado).</p>
-          <div class="info-box">
-            <div class="info-label">Ventana de Contención (CW)</div>
-            La estación elige un valor k al azar entre [0, CW-1]. Cada intento fallido duplica la CW (Binary Exponential Backoff). Esto reduce la probabilidad de que dos estaciones elijan el mismo slot y vuelvan a colisionar.
-          </div>
+          <p><strong>NAV (Network Allocation Vector):</strong> detección virtual. Temporizador local que indica cuánto tiempo estará reservado el canal, basado en el campo <em>Duration</em> de las tramas de control escuchadas.</p>
+          <p><strong>Backoff aleatorio:</strong> la estación elige k al azar entre [0, CW-1]. El contador decrece cuando el canal está libre, se congela cuando está ocupado.</p>
+          <div class="info-box"><div class="info-label">Ventana de Contención (CW)</div>Cada intento fallido duplica la CW (Binary Exponential Backoff). Reduce la probabilidad de que dos estaciones elijan el mismo slot y vuelvan a colisionar.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">👁️</div>
-          <div class="block-title">Estación Oculta y Estación Expuesta</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">👁️</div><div class="block-title">Estación Oculta y Estación Expuesta</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">Estación Oculta</div>
-            <strong>Situación:</strong> A y C no se escuchan entre sí, pero ambas están en rango de B.<br>
-            <strong>Problema:</strong> A y C transmiten simultáneamente a B creyendo que el canal está libre → colisión en B.<br>
-            <strong>Solución:</strong> RTS/CTS. B responde al RTS de A con un CTS que informa a C (y a cualquier estación oculta para A) que el canal está reservado.
-          </div>
-          <div class="warn-box">
-            <div class="warn-label">Estación Expuesta</div>
-            <strong>Situación:</strong> B transmite a A. C escucha a B y cree que el canal está ocupado, así que no transmite a D.<br>
-            <strong>Problema:</strong> la transmisión de C a D no interferiría con la de B a A, pero C se abstiene innecesariamente.<br>
-            <strong>Consecuencia:</strong> <em>subutilización del canal</em> y menor reutilización espacial.
-          </div>
+          <div class="def-box"><div class="def-label">Estación Oculta</div><strong>Situación:</strong> A y C no se escuchan entre sí, pero ambas están en rango de B.<br><strong>Problema:</strong> A y C transmiten simultáneamente a B → colisión en B.<br><strong>Solución:</strong> RTS/CTS. B responde al RTS de A con un CTS que informa a C que el canal está reservado.</div>
+          <div class="warn-box"><div class="warn-label">Estación Expuesta</div><strong>Situación:</strong> B transmite a A. C escucha a B y cree que el canal está ocupado, así que no transmite a D.<br><strong>Problema:</strong> la transmisión de C a D no interferiría, pero C se abstiene innecesariamente → <em>subutilización del canal</em>.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🎛️</div>
-          <div class="block-title">DCF vs PCF — Funciones de coordinación</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🎛️</div><div class="block-title">DCF vs PCF — Funciones de coordinación</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">DCF — Distributed Coordination Function</div>
-              <ul>
-                <li>Modo estándar y distribuido</li>
-                <li>Todas las estaciones compiten por el canal</li>
-                <li>Secuencia: RTS → CTS → DATA → ACK</li>
-                <li>Usa backoff aleatorio</li>
-                <li>Requiere DIFS antes de transmitir</li>
-                <li>Funciona en redes ad hoc y con infraestructura</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">PCF — Point Coordination Function</div>
-              <ul>
-                <li>Modo centralizado con AP</li>
-                <li>AP coordina mediante <em>polling</em></li>
-                <li>Elimina colisiones internas</li>
-                <li>AP inicia "Período Libre de Contención"</li>
-                <li>Usa PIFS para ganar acceso antes que DCF</li>
-                <li>Solo en redes con infraestructura</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">DCF — Distributed Coordination Function</div><ul><li>Modo estándar y distribuido</li><li>Todas las estaciones compiten por el canal</li><li>Secuencia: RTS → CTS → DATA → ACK</li><li>Requiere DIFS antes de transmitir</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">PCF — Point Coordination Function</div><ul><li>Modo centralizado con AP</li><li>AP coordina mediante <em>polling</em></li><li>Elimina colisiones internas</li><li>Usa PIFS para ganar acceso antes que DCF</li></ul></div>
           </div>
-          <div class="info-box">
-            <div class="info-label">Prioridades temporales: SIFS &lt; PIFS &lt; DIFS</div>
-            <strong>SIFS</strong> (Short IFS): el más corto → máxima prioridad. Para ACKs, CTS, fragmentos dentro del mismo diálogo.<br>
-            <strong>PIFS</strong> (PCF IFS): intermedio → el AP lo usa para ganar acceso en modo PCF antes que DCF.<br>
-            <strong>DIFS</strong> (DCF IFS): el más largo → las estaciones en contención esperan DIFS antes de transmitir o iniciar backoff.
-          </div>
+          <div class="info-box"><div class="info-label">Prioridades temporales: SIFS &lt; PIFS &lt; DIFS</div><strong>SIFS:</strong> el más corto → máxima prioridad. Para ACKs, CTS.<br><strong>PIFS:</strong> intermedio → el AP lo usa en modo PCF.<br><strong>DIFS:</strong> el más largo → estaciones en contención esperan DIFS.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📊</div>
-          <div class="block-title">Tasa Efectiva vs Tasa Física</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📊</div><div class="block-title">Tasa Efectiva vs Tasa Física</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">Fórmula</div>
-            R_eff = Bits útiles de datos / Tiempo total (incluyendo todo el overhead)
-          </div>
-          <p>El tiempo total incluye:</p>
-          <ul>
-            <li><strong>Tramas de control:</strong> duración de RTS, CTS y ACK (frecuentemente transmitidos a tasa más baja y robusta que los datos)</li>
-            <li><strong>Trama de datos:</strong> duración del payload a tasa física</li>
-            <li><strong>Intervalos de espera:</strong> SIFS, DIFS o PIFS según la secuencia</li>
-            <li><strong>Backoff:</strong> tiempo aleatorio de espera</li>
-          </ul>
-          <div class="warn-box">
-            <div class="warn-label">Importante en examen</div>
-            La tasa efectiva siempre es <strong>menor</strong> que la tasa física. En un cálculo, hay que sumar todos los intervalos (SIFS, DIFS), la duración de cada trama de control (a la tasa de control), y la trama de datos. Solo el payload cuenta en el numerador.
-          </div>
+          <div class="def-box"><div class="def-label">Fórmula</div>R_eff = Bits útiles de datos / Tiempo total (incluyendo todo el overhead)</div>
+          <p>El tiempo total incluye: tramas de control (RTS, CTS, ACK), trama de datos, intervalos SIFS/DIFS, backoff aleatorio.</p>
+          <div class="warn-box"><div class="warn-label">Importante en examen</div>La tasa efectiva siempre es <strong>menor</strong> que la tasa física. Hay que sumar todos los intervalos. Solo el payload cuenta en el numerador.</div>
         </div>
       </div>
     </div>
@@ -1414,105 +454,42 @@ L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 by
       <div class="detail-hero">
         <div class="detail-hero-icon">🌊</div>
         <div class="detail-title">Control de Flujo en la Capa de Transporte</div>
-        <div class="detail-intro">Evita que un emisor rápido desborde la capacidad de procesamiento de un receptor lento. Opera <strong>extremo a extremo</strong> entre procesos en los hosts, no salto a salto. El mecanismo central: el receptor informa cuánto espacio tiene disponible y el emisor se autorregula.</div>
+        <div class="detail-intro">Evita que un emisor rápido desborde la capacidad de procesamiento de un receptor lento. Opera <strong>extremo a extremo</strong>. El receptor informa cuánto espacio tiene disponible y el emisor se autorregula.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🆚</div>
-          <div class="block-title">Control de flujo vs congestión — Diferencias clave</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🆚</div><div class="block-title">Control de flujo vs congestión — Diferencias clave</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <table class="styled-table">
-            <thead><tr><th>Característica</th><th>Control de Flujo</th><th>Control de Congestión</th></tr></thead>
-            <tbody>
-              <tr><td>¿Qué protege?</td><td>Al <strong>receptor</strong> individual</td><td>A la <strong>red global</strong></td></tr>
-              <tr><td>Variable</td><td>rwnd (receive window)</td><td>cwnd (congestion window)</td></tr>
-              <tr><td>Quién lo informa</td><td>El receptor al emisor</td><td>TCP lo infiere de pérdidas</td></tr>
-              <tr><td>Alcance</td><td>Extremo a extremo (host a host)</td><td>Extremo a extremo (considera red)</td></tr>
-              <tr><td>Capa de enlace</td><td>También existe (salto a salto)</td><td>No (es exclusivo de transporte)</td></tr>
-            </tbody>
-          </table>
+          <table class="styled-table"><thead><tr><th>Característica</th><th>Control de Flujo</th><th>Control de Congestión</th></tr></thead><tbody><tr><td>¿Qué protege?</td><td>Al <strong>receptor</strong> individual</td><td>A la <strong>red global</strong></td></tr><tr><td>Variable</td><td>rwnd (receive window)</td><td>cwnd (congestion window)</td></tr><tr><td>Quién lo informa</td><td>El receptor al emisor</td><td>TCP lo infiere de pérdidas</td></tr></tbody></table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">💾</div>
-          <div class="block-title">¿Por qué el receptor necesita búferes?</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">💾</div><div class="block-title">¿Por qué el receptor necesita búferes?</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>El receptor mantiene búferes para almacenar segmentos antes de pasarlos a la aplicación (vía <em>socket recv</em>). Son necesarios por 3 razones:</p>
           <ol class="steps">
-            <li><strong>Disparidad de velocidad:</strong> el emisor puede generar datos más rápido de lo que la aplicación receptora los consume.</li>
+            <li><strong>Disparidad de velocidad:</strong> el emisor puede generar datos más rápido de lo que la aplicación los consume.</li>
             <li><strong>Eficiencia en el procesamiento:</strong> acumular segmentos para procesarlos en lotes reduce la sobrecarga del sistema.</li>
-            <li><strong>Gestión de desorden:</strong> los segmentos pueden llegar fuera de secuencia (por retransmisiones o cambios de ruta) y deben almacenarse hasta completar el orden correcto.</li>
+            <li><strong>Gestión de desorden:</strong> los segmentos pueden llegar fuera de secuencia y deben almacenarse hasta completar el orden correcto.</li>
           </ol>
-          <div class="warn-box">
-            <div class="warn-label">Consecuencia crítica</div>
-            Sin búferes, cualquier desajuste de velocidad o desorden en la red resulta en pérdida inmediata de datos.
-          </div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">⚠️</div>
-          <div class="block-title">¿Qué puede agotar los búferes del receptor?</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🤝</div><div class="block-title">Protocolo dinámico de "Pedir y Otorgar" (Créditos)</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p><strong>A. Aplicación lenta:</strong> si la aplicación receptora está ocupada con otras tareas y lee datos lentamente, el búfer se llena. Si el emisor no frena, los nuevos segmentos se descartan (drop).</p>
-          <p><strong>B. Retrasos de red:</strong></p>
-          <ul>
-            <li>Un paquete corrupto bloquea la entrega a la aplicación de todos los paquetes correctos que llegaron después (hay que esperar la retransmisión del dañado).</li>
-            <li>Cambio de rutas: los paquetes llegan fuera de orden, el búfer los retiene más tiempo del previsto.</li>
-          </ul>
-          <p><strong>C. Presupuesto fijo de memoria:</strong> el host tiene memoria limitada para todas las conexiones simultáneas. A más conexiones, menos búfer por conexión.</p>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🤝</div>
-          <div class="block-title">Protocolo dinámico de "Pedir y Otorgar" (Créditos)</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>En vez de enviar a ciegas y descartar cuando hay overflow, se negocia dinámicamente:</p>
           <ol class="steps">
-            <li><strong>Solicitud:</strong> el emisor pide una cantidad inicial de búferes según sus necesidades.</li>
-            <li><strong>Concesión (Grant):</strong> el receptor otorga un número específico de búferes según su carga actual.</li>
-            <li><strong>Contador de crédito:</strong> el emisor lleva un contador. Cada segmento enviado resta 1. Si llega a 0, el emisor <strong>se detiene</strong> hasta recibir más espacio.</li>
+            <li><strong>Solicitud:</strong> el emisor pide una cantidad inicial de búferes.</li>
+            <li><strong>Concesión (Grant):</strong> el receptor otorga un número específico según su carga actual.</li>
+            <li><strong>Contador de crédito:</strong> el emisor lleva un contador. Cada segmento enviado resta 1. Si llega a 0, se detiene hasta recibir más espacio.</li>
           </ol>
-          <div class="def-box">
-            <div class="def-label">Deadlock (Estancamiento)</div>
-            Escenario peligroso: el segmento de reserva de búferes (grant) se pierde en la red. El emisor espera permiso para enviar, el receptor cree haberlo dado ya.<br><br>
-            <strong>Solución:</strong> cada host envía periódicamente el estado actual de sus búferes y ACKs acumulados. El estado se restaura aunque se pierdan mensajes de control.
-          </div>
+          <div class="def-box"><div class="def-label">Deadlock (Estancamiento)</div>El segmento de reserva de búferes se pierde. El emisor espera permiso, el receptor cree haberlo dado ya.<br><br><strong>Solución:</strong> cada host envía periódicamente el estado actual de sus búferes y ACKs acumulados.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔧</div>
-          <div class="block-title">Control de flujo en TCP — Optimizaciones específicas</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔧</div><div class="block-title">Control de flujo en TCP — Optimizaciones</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p><strong>Secuenciación por bytes:</strong> el número de secuencia representa la posición del <em>byte</em> en el flujo, no el número del paquete. Permite granularidad fina.</p>
-          <p><strong>Almacenamiento de payload únicamente:</strong> TCP no guarda las cabeceras en el búfer de recepción, solo el contenido útil (payload). El mismo espacio retiene más datos reales.</p>
-          <p><strong>Anuncio proactivo (rwnd):</strong> el receptor anuncia por iniciativa propia su espacio disponible en cada ACK. No hay que solicitar permiso explícito como en el protocolo genérico.</p>
-          <p><strong>Búfer circular:</strong> cuando la aplicación lee datos (via socket recv), libera bytes del inicio del búfer y habilita espacio nuevo al final. Es gestión dinámica continua.</p>
-          <div class="info-box">
-            <div class="info-label">Ventana efectiva de envío TCP</div>
-            Ventana efectiva = min(rwnd, cwnd)<br>
-            rwnd = control de flujo (capacidad del receptor)<br>
-            cwnd = control de congestión (capacidad de la red)<br>
-            El emisor respeta el mínimo de ambas.
-          </div>
+          <p><strong>Secuenciación por bytes:</strong> el número de secuencia representa la posición del <em>byte</em> en el flujo, no el número del paquete.</p>
+          <p><strong>Anuncio proactivo (rwnd):</strong> el receptor anuncia su espacio disponible en cada ACK. No hay que solicitar permiso explícito.</p>
+          <p><strong>Búfer circular:</strong> cuando la aplicación lee datos, libera bytes del inicio del búfer y habilita espacio nuevo al final.</p>
+          <div class="info-box"><div class="info-label">Ventana efectiva de envío TCP</div>Ventana efectiva = min(rwnd, cwnd)<br>rwnd = control de flujo (capacidad del receptor)<br>cwnd = control de congestión (capacidad de la red)</div>
         </div>
       </div>
     </div>
@@ -1525,142 +502,33 @@ L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 by
       <div class="detail-hero">
         <div class="detail-hero-icon">⚡</div>
         <div class="detail-title">Control de Congestión en TCP</div>
-        <div class="detail-intro">Evita el colapso de la red cuando la demanda supera la capacidad de los routers intermedios. TCP infiere la congestión a través de pérdidas de paquetes y ajusta dinámicamente cuántos datos puede tener "en vuelo". La estrategia central: <strong>AIMD</strong> — crecer despacio, decrecer rápido.</div>
+        <div class="detail-intro">Evita el colapso de la red cuando la demanda supera la capacidad de los routers. TCP infiere la congestión a través de pérdidas y ajusta dinámicamente cuántos datos puede tener "en vuelo". La estrategia central: <strong>AIMD</strong>.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🚨</div>
-          <div class="block-title">¿Qué es la congestión y cómo se produce?</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🚨</div><div class="block-title">¿Qué es la congestión y cómo se produce?</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Ocurre cuando la red no puede seguir el ritmo del tráfico. El proceso:</p>
           <ol class="steps">
-            <li><strong>Saturación:</strong> el tráfico entrante supera la capacidad de reenvío del router.</li>
-            <li><strong>Desbordamiento:</strong> los búferes (colas de salida) se llenan por completo.</li>
-            <li><strong>Descarte:</strong> el router tira paquetes → el emisor retransmite → más tráfico → ciclo de retroalimentación positiva que puede colapsar la red.</li>
+            <li><strong>Saturación:</strong> el tráfico entrante supera la capacidad del router.</li>
+            <li><strong>Desbordamiento:</strong> los búferes se llenan por completo.</li>
+            <li><strong>Descarte:</strong> el router tira paquetes → el emisor retransmite → más tráfico → ciclo de colapso.</li>
           </ol>
-          <div class="warn-box">
-            <div class="warn-label">Diferencia crítica: flujo vs congestión</div>
-            Control de flujo → protege al receptor (rwnd)<br>
-            Control de congestión → protege a la red (cwnd)<br>
-            En TCP el emisor respeta: <strong>min(rwnd, cwnd)</strong>
-          </div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🪟</div>
-          <div class="block-title">La Ventana de Congestión (cwnd) — El regulador</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📈</div><div class="block-title">Slow Start y Congestion Avoidance</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>TCP mantiene la variable <strong>cwnd</strong> (congestion window): máximo de bytes que puede tener en la red sin haber recibido ACK.</p>
-          <table class="styled-table">
-            <thead><tr><th>Estado de cwnd</th><th>Efecto</th></tr></thead>
-            <tbody>
-              <tr><td>cwnd muy pequeño</td><td>Subutilización — sobra capacidad de red sin usar</td></tr>
-              <tr><td>cwnd óptimo</td><td>Uso pleno de la capacidad sin saturar búferes</td></tr>
-              <tr><td>cwnd muy grande</td><td>Congestión — descarte de paquetes, retransmisiones</td></tr>
-            </tbody>
-          </table>
-          <p>TCP detecta congestión principalmente por <strong>pérdida de paquetes</strong>. Dos señales:</p>
-          <ul>
-            <li><strong>Timeout:</strong> el temporizador de retransmisión expira → señal fuerte, posible colapso.</li>
-            <li><strong>3 ACKs duplicados:</strong> el receptor envía repetidamente el mismo ACK solicitando un segmento faltante, pero sigue recibiendo paquetes posteriores → señal moderada, red todavía funciona.</li>
-          </ul>
+          <div class="def-box"><div class="def-label">Slow Start — Arranque Lento</div>A pesar del nombre, busca alcanzar rápidamente la capacidad mediante crecimiento <em>exponencial</em>.<br>• Inicio: cwnd = 1 MSS<br>• Por cada ACK recibido: cwnd += 1 MSS → se duplica cada RTT<br>• Se detiene cuando cwnd alcanza ssthresh</div>
+          <div class="info-box"><div class="info-label">Congestion Avoidance</div>Una vez que cwnd ≥ ssthresh, el crecimiento pasa a <em>lineal</em>:<br>• cwnd += 1 MSS por cada RTT completo<br>• Implementa la parte "Additive Increase" de AIMD</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📈</div>
-          <div class="block-title">Slow Start y Congestion Avoidance</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">⚔️</div><div class="block-title">TCP Tahoe vs TCP Reno — La evolución crítica</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">Slow Start — Arranque Lento</div>
-            A pesar del nombre, busca <strong>alcanzar rápidamente</strong> la capacidad de la red mediante crecimiento <em>exponencial</em>.<br><br>
-            • Inicio: cwnd = 1 MSS<br>
-            • Por cada ACK recibido: cwnd += 1 MSS<br>
-            • En la práctica: se duplica cada RTT → 1→2→4→8→16...<br>
-            • Se detiene cuando cwnd alcanza ssthresh
-          </div>
-          <div class="info-box">
-            <div class="info-label">Congestion Avoidance — Evitación de Congestión</div>
-            Una vez que cwnd ≥ ssthresh, el crecimiento pasa a <em>lineal</em>:<br><br>
-            • Regla: cwnd += 1 MSS por cada RTT completo<br>
-            • Propósito: acercarse con precaución al límite máximo disponible<br>
-            • Esto implementa la parte "Additive Increase" de AIMD
-          </div>
-          <p><strong>ssthresh (Slow Start Threshold):</strong> umbral dinámico que separa la fase exponencial de la lineal. Se recalcula ante cada pérdida.</p>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">⚔️</div>
-          <div class="block-title">TCP Tahoe vs TCP Reno — La evolución crítica</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>La diferencia fundamental: ¿todas las pérdidas son iguales?</p>
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">TCP Tahoe (1988)</div>
-              <ul>
-                <li>Ante <strong>cualquier</strong> pérdida (timeout O 3 ACKs dup)</li>
-                <li>ssthresh = cwnd / 2</li>
-                <li>cwnd = 1 MSS</li>
-                <li>Reinicia ciclo completo (Slow Start)</li>
-                <li>Patrón visual: dientes de sierra grandes, caídas a cero</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">TCP Reno (1990)</div>
-              <ul>
-                <li>Distingue el tipo de pérdida</li>
-                <li>Por <strong>Timeout</strong>: igual que Tahoe (colapso total)</li>
-                <li>Por <strong>3 ACKs dup</strong>: Fast Recovery</li>
-                <li>→ ssthresh = cwnd/2; cwnd = ssthresh (no a 1)</li>
-                <li>Patrón visual: dientes de sierra pequeños y frecuentes</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">TCP Tahoe (1988)</div><ul><li>Ante <strong>cualquier</strong> pérdida (timeout O 3 ACKs dup)</li><li>ssthresh = cwnd / 2</li><li>cwnd = 1 MSS — reinicia desde cero</li><li>Patrón: dientes de sierra grandes</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">TCP Reno (1990)</div><ul><li>Distingue el tipo de pérdida</li><li>Por <strong>Timeout</strong>: igual que Tahoe (cwnd = 1)</li><li>Por <strong>3 ACKs dup</strong>: Fast Recovery → cwnd = ssthresh</li><li>Patrón: dientes de sierra pequeños y frecuentes</li></ul></div>
           </div>
-          <div class="info-box">
-            <div class="info-label">¿Por qué Reno es mejor ante 3 ACKs duplicados?</div>
-            Si el receptor sigue enviando ACKs (aunque sean duplicados), significa que la red <strong>todavía está entregando paquetes</strong>. No es un colapso total. Reno lo interpreta correctamente y no castiga tan severamente, manteniendo la ventana en la mitad en vez de reiniciar desde 1.
-          </div>
-          <table class="styled-table">
-            <thead><tr><th>Evento</th><th>Tahoe</th><th>Reno</th></tr></thead>
-            <tbody>
-              <tr><td>3 ACKs duplicados</td><td>cwnd = 1, Slow Start</td><td>cwnd = ssthresh, Fast Recovery</td></tr>
-              <tr><td>Timeout</td><td>cwnd = 1, Slow Start</td><td>cwnd = 1, Slow Start (igual)</td></tr>
-              <tr><td>Post-pérdida (3 ACKs)</td><td>Vuelve al mínimo absoluto</td><td>Sigue con la mitad de cwnd</td></tr>
-              <tr><td>Eficiencia</td><td>Menor (cae muy bajo)</td><td>Mayor (no cae tan drásticamente)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🌐</div>
-          <div class="block-title">Conceptos avanzados — Fairness, BBR y AIMD</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p><strong>AIMD (Additive Increase, Multiplicative Decrease):</strong> el mecanismo central de TCP. Aumenta linealmente (+1 MSS/RTT) para explorar la red y reduce a la mitad ante pérdida. Converge a un equilibrio entre flujos que comparten un enlace.</p>
-          <div class="def-box">
-            <div class="def-label">Justicia (Fairness)</div>
-            AIMD converge hacia un ancho de banda similar entre múltiples flujos que comparten un enlace.<br>
-            <strong>Pero:</strong> flujos con RTT menores tienden a ganar más ancho de banda (ventana crece más veces por segundo).<br>
-            <strong>UDP no implementa control de congestión</strong> → puede ser "injusto" acaparando el enlace.
-          </div>
-          <p><strong>Señales basadas en Delay (BBR, Vegas):</strong> enfoques modernos que detectan congestión <em>antes</em> del descarte, usando el aumento del RTT medido como indicador temprano. Si RTT medido > RTT esperado → hay colas formándose → reducir ritmo preventivamente.</p>
+          <table class="styled-table"><thead><tr><th>Evento</th><th>Tahoe</th><th>Reno</th></tr></thead><tbody><tr><td>3 ACKs duplicados</td><td>cwnd = 1, Slow Start</td><td>cwnd = ssthresh, Fast Recovery</td></tr><tr><td>Timeout</td><td>cwnd = 1, Slow Start</td><td>cwnd = 1, Slow Start (igual)</td></tr></tbody></table>
         </div>
       </div>
     </div>
@@ -1673,134 +541,28 @@ L_min = 10×10⁶ b/s × 2 × 25μs = 500 bits = 62.5 bytes → estándar: 64 by
       <div class="detail-hero">
         <div class="detail-hero-icon">🔄</div>
         <div class="detail-title">El Problema de los Duplicados Retrasados</div>
-        <div class="detail-intro">Segmentos que permanecen en la red más tiempo del esperado pueden llegar al receptor <em>fuera de su contexto original</em>, siendo confundidos con datos nuevos. La regla es absoluta: <strong>no se pueden entregar duplicados a la aplicación</strong>. La solución: limitar el tiempo de vida de los paquetes (T) y gestionar el espacio de números de secuencia.</div>
+        <div class="detail-intro">Segmentos que permanecen en la red más tiempo del esperado pueden llegar al receptor <em>fuera de su contexto original</em>, siendo confundidos con datos nuevos. La regla: <strong>nunca se pueden entregar duplicados a la aplicación</strong>.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">💫</div>
-          <div class="block-title">¿Por qué existen duplicados en la red?</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔢</div><div class="block-title">Números de secuencia y el problema del espacio finito</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>En una red de conmutación de paquetes, múltiples copias de un segmento pueden viajar simultáneamente:</p>
-          <ul>
-            <li><strong>Pérdida de ACKs:</strong> si el ACK se pierde, el emisor retransmite el segmento original. El receptor recibe dos copias del mismo segmento.</li>
-            <li><strong>Timeout por congestión:</strong> la red está lenta, el temporizador expira antes de que llegue el ACK → retransmisión innecesaria.</li>
-          </ul>
-          <div class="warn-box">
-            <div class="warn-label">La regla fundamental del diseño</div>
-            Un protocolo de transporte NUNCA puede entregar un segmento duplicado a la capa de aplicación. El receptor debe poder determinar, por cada segmento recibido, si es nuevo o un duplicado obsoleto.
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔢</div>
-          <div class="block-title">Números de secuencia — La solución viable</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <table class="styled-table">
-            <thead><tr><th>Método</th><th>Descripción</th><th>Viabilidad</th></tr></thead>
-            <tbody>
-              <tr><td>Comparación bit a bit</td><td>Comparar el contenido con todos los segmentos previos</td><td><strong>Inviable</strong> — almacenamiento masivo + costo computacional prohibitivo</td></tr>
-              <tr><td>Números de secuencia</td><td>Identificar cada segmento con un número único correlativo</td><td><strong>Viable</strong> — eficiente, pero el espacio es finito</td></tr>
-            </tbody>
-          </table>
-          <div class="warn-box">
-            <div class="warn-label">El problema del espacio finito</div>
-            Los encabezados tienen longitud fija → el campo de número de secuencia tiene N bits fijos → inevitablemente los números se reutilizan (ciclan). Esto crea ambigüedad.
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">💥</div>
-          <div class="block-title">Dos escenarios de error por duplicados</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">Escenario A — Dentro de la misma conexión (ciclo)</div>
-            El espacio de secuencia se completa una vuelta: los números avanzan 0→1→2→3→0→1...<br><br>
-            <strong>Fallo:</strong> un segmento antiguo con n° 3 queda demorado en la red y llega justo cuando la conexión dio la vuelta y espera un nuevo segmento con ese mismo número.<br>
-            <strong>Resultado:</strong> el receptor acepta el duplicado antiguo como dato nuevo.
-          </div>
-          <div class="warn-box">
-            <div class="warn-label">Escenario B — Entre conexiones distintas</div>
-            Se libera una conexión y se abre una nueva rápidamente, reutilizando los mismos puertos y parámetros.<br><br>
-            <strong>Fallo:</strong> la nueva conexión empieza con un número de secuencia que coincide con un segmento que todavía "vive" en la red de la conexión anterior.<br>
-            <strong>Resultado:</strong> el segmento viejo es aceptado por error en la nueva conexión.
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">⏳</div>
-          <div class="block-title">Solución — Límite de Tiempo de Vida (T) y dimensionamiento</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>La solución integral: garantizar que ningún paquete permanezca en la red más de <strong>T segundos</strong>.</p>
-          <div class="def-box">
-            <div class="def-label">Solución para Escenario A (mismo ciclo)</div>
-            <strong>Regla:</strong> el origen no debe reutilizar un número de secuencia dentro del intervalo T.<br>
-            <strong>Requisito:</strong> el espacio de secuencia debe ser suficientemente grande para que, a la tasa de transmisión, no se complete el ciclo antes de T segundos.
-          </div>
-          <div class="formula">
-Ejercicio de dimensionamiento:
+          <p>La solución viable es identificar cada segmento con un número único. El problema: el espacio es finito → los números se reutilizan (ciclan) → ambigüedad.</p>
+          <div class="formula">Ejercicio de dimensionamiento:
 Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
 
 1. Bits totales en T: 10⁷ × 30 = 3×10⁸ bits
 2. Bits por segmento: 1500 × 8 = 12.000 bits
 3. Segmentos máximos en T: 3×10⁸ / 12.000 = 25.000 segmentos
-4. Bits necesarios: log₂(25.000) ≈ 14.6
-
-→ Se necesitan al menos 15 bits para el número de secuencia.
-          </div>
+4. Bits necesarios: log₂(25.000) ≈ 14.6 → se necesitan al menos 15 bits</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔑</div>
-          <div class="block-title">ISN — Número Inicial de Secuencia (Escenario B)</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔑</div><div class="block-title">ISN — Número Inicial de Secuencia</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Cada nueva conexión debe elegir un ISN que no choque con duplicados residuales de conexiones anteriores.</p>
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">ISN Aleatorio (Comer)</div>
-              <ul>
-                <li>Se elige un número aleatorio de 32 bits al crear la conexión</li>
-                <li>El rango enorme (2³² posibilidades) hace extremadamente improbable coincidir con un duplicado retrasado</li>
-                <li>Simple de implementar</li>
-                <li>No garantiza matemáticamente la ausencia de colisión</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">ISN Atado al Reloj (Tanenbaum)</div>
-              <ul>
-                <li>Un contador binario se incrementa en intervalos uniformes</li>
-                <li>El ISN se toma del valor actual del reloj</li>
-                <li>El reloj avanza monótonamente → cada conexión usa números posteriores a la anterior</li>
-                <li>Fuera del alcance de duplicados anteriores</li>
-                <li>TCP usa pulsos de ~4 μs con 32 bits para T=120s</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">ISN Aleatorio (Comer)</div><ul><li>Se elige un número aleatorio de 32 bits al crear la conexión</li><li>El rango enorme hace extremadamente improbable coincidir con un duplicado</li><li>Simple de implementar</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">ISN Atado al Reloj (Tanenbaum)</div><ul><li>Un contador binario se incrementa en intervalos uniformes</li><li>El reloj avanza monótonamente → cada conexión usa números posteriores</li><li>TCP usa pulsos de ~4 μs con 32 bits para T=120s</li></ul></div>
           </div>
-          <table class="styled-table">
-            <thead><tr><th>Contexto</th><th>Causa del problema</th><th>Solución</th></tr></thead>
-            <tbody>
-              <tr><td>Misma conexión</td><td>Ciclo del espacio más rápido que T</td><td>Dimensionar el espacio para no ciclar en T segundos</td></tr>
-              <tr><td>Entre conexiones</td><td>Nueva conexión reutiliza números de la anterior</td><td>ISN aleatorio o basado en reloj monótono</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -1813,114 +575,30 @@ Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
       <div class="detail-hero">
         <div class="detail-hero-icon">🌐</div>
         <div class="detail-title">Organización y Reenvío en Interredes</div>
-        <div class="detail-intro">Una interred conecta múltiples redes heterogéneas. El desafío: redes con distintos protocolos, esquemas de direccionamiento y límites de tamaño de paquete deben colaborar. Los mecanismos clave: <strong>fragmentación</strong>, <strong>entunelamiento</strong> y <strong>agregación de prefijos</strong>.</div>
+        <div class="detail-intro">Una interred conecta múltiples redes heterogéneas. Los mecanismos clave: <strong>fragmentación</strong>, <strong>entunelamiento</strong> y <strong>agregación de prefijos</strong>.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🏗️</div>
-          <div class="block-title">Jerarquía de proveedores y relaciones económicas</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">✂️</div><div class="block-title">Fragmentación — Gestión de diferentes MTUs</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>La interconexión no es solo técnica — es un ecosistema de relaciones económicas y administrativas entre redes:</p>
-          <table class="styled-table">
-            <thead><tr><th>Nivel</th><th>Tipo</th><th>Rol</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>Redes de acceso</td><td>Punto de entrada para usuarios finales</td></tr>
-              <tr><td>2</td><td>Redes regionales</td><td>Conectan redes de acceso, tránsito local</td></tr>
-              <tr><td>3</td><td>Redes globales de tránsito</td><td>Backbone — conectividad a gran escala</td></tr>
-            </tbody>
-          </table>
-          <table class="styled-table">
-            <thead><tr><th>Relación</th><th>Descripción</th><th>Característica clave</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Proveedor-Consumidor</strong></td><td>La red cliente paga a la proveedora por tránsito</td><td>Permite llegar a cualquier destino</td></tr>
-              <tr><td><strong>Peering</strong></td><td>Intercambio mutuo de tráfico sin cobro</td><td><strong>No es transitivo</strong> — el compañero de mi compañero no es mi compañero</td></tr>
-              <tr><td><strong>Multihoming</strong></td><td>Conectarse a varios proveedores simultáneamente</td><td>Mejora resiliencia ante fallos</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">✂️</div>
-          <div class="block-title">Fragmentación — Gestión de diferentes MTUs</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>Las redes tienen distintos límites de tamaño de paquete: desde 48 bytes (ATM) hasta 65.515 bytes (IP). Cuando un paquete excede el MTU de la red siguiente, debe <strong>fragmentarse</strong>.</p>
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">Fragmentación Transparente</div>
-              <ul>
-                <li>La puerta de enlace de salida reensambla</li>
-                <li>La red siguiente ve el paquete completo</li>
-                <li><strong>Desventajas:</strong> alta sobrecarga por reensamblado repetitivo; todos los paquetes deben salir por la misma puerta de enlace</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">Fragmentación No Transparente (IPv4)</div>
-              <ul>
-                <li>El reensamblado ocurre SOLO en el host destino</li>
-                <li>Cada fragmento viaja independientemente</li>
-                <li>Más flexible para enrutamiento</li>
-                <li><strong>Desventajas:</strong> todos los hosts necesitan capacidad de reensamblado; más overhead por encabezados extra</li>
-              </ul>
-            </div>
+            <div class="compare-col"><div class="compare-col-title">Fragmentación Transparente</div><ul><li>La puerta de enlace de salida reensambla</li><li>La red siguiente ve el paquete completo</li><li><strong>Problema:</strong> todos los paquetes deben salir por la misma puerta</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">Fragmentación No Transparente (IPv4)</div><ul><li>El reensamblado ocurre SOLO en el host destino</li><li>Cada fragmento viaja independientemente</li><li>Más flexible para enrutamiento</li></ul></div>
           </div>
-          <div class="info-box">
-            <div class="info-label">Campos IPv4 para fragmentación</div>
-            <strong>Identificación (ID):</strong> valor común para todos los fragmentos del mismo datagrama<br>
-            <strong>Bit MF (More Fragments):</strong> 1 = hay más fragmentos; 0 = último fragmento<br>
-            <strong>Offset:</strong> posición del fragmento en el original, medido en unidades de <strong>8 bytes</strong><br>
-            <strong>Bit DF (Don't Fragment):</strong> si está en 1, prohíbe la fragmentación (se usa en Path MTU Discovery)
-          </div>
+          <div class="info-box"><div class="info-label">Campos IPv4 para fragmentación</div><strong>Identificación (ID):</strong> valor común para todos los fragmentos del mismo datagrama<br><strong>Bit MF (More Fragments):</strong> 1 = hay más fragmentos; 0 = último fragmento<br><strong>Offset:</strong> posición del fragmento en el original, en unidades de <strong>8 bytes</strong><br><strong>Bit DF (Don't Fragment):</strong> si está en 1, prohíbe la fragmentación</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🕳️</div>
-          <div class="block-title">Entunelamiento — Encapsulación de identidad</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🕳️</div><div class="block-title">Entunelamiento — Encapsulación de identidad</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">¿Qué es?</div>
-            Permite transportar un paquete de protocolo X a través de una red que solo entiende el protocolo Y, encapsulando el paquete X dentro de un encabezado Y. La red intermedia lo ve como tráfico Y normal.
-          </div>
-          <p><strong>Caso de uso típico:</strong> conectar dos redes IPv6 separadas por una red IPv4. El paquete IPv6 viaja como payload dentro de un datagrama IPv4.</p>
-          <p><strong>Desde la red intermedia:</strong> no ve nada especial — el paquete encapsulado es simplemente "carga útil" (payload). La red actúa como una "línea serial" o túnel.</p>
-          <div class="info-box">
-            <div class="info-label">Analogía</div>
-            Es como meter una carta (paquete IPv6) dentro de un sobre con dirección diferente (encabezado IPv4). El cartero (red IPv4) solo ve el sobre exterior y lo entrega. Al llegar, se abre el sobre y se lee la carta original.
-          </div>
+          <div class="def-box"><div class="def-label">¿Qué es?</div>Permite transportar un paquete de protocolo X a través de una red que solo entiende el protocolo Y, encapsulando el paquete X dentro de un encabezado Y. La red intermedia lo ve como tráfico Y normal.</div>
+          <div class="info-box"><div class="info-label">Analogía</div>Es como meter una carta (paquete IPv6) dentro de un sobre con dirección diferente (encabezado IPv4). El cartero (red IPv4) solo ve el sobre exterior y lo entrega.</div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🗜️</div>
-          <div class="block-title">Agregación de Prefijos — Escalabilidad del enrutamiento</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🗜️</div><div class="block-title">Agregación de Prefijos — Escalabilidad del enrutamiento</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>A medida que la interred crece, mantener una entrada por cada LAN individual hace las tablas de reenvío inmanejables.</p>
-          <div class="def-box">
-            <div class="def-label">Cómo funciona la agregación</div>
-            Se buscan los bits más significativos comunes (desde la izquierda) entre varios prefijos para crear una entrada agregada que los cubra a todos. Por ejemplo, 4 redes /22 se pueden agregar en una sola /20.
-          </div>
-          <div class="info-box">
-            <div class="info-label">Ejemplo operativo</div>
-            Un router en Londres puede combinar múltiples prefijos universitarios (Cambridge, Oxford, Edinburgh — cada uno con su rango de IPs) en un único prefijo agregado, como <strong>192.24.0.0/19</strong>, y anunciar solo ese al router de Nueva York. Un prefijo cubre miles de direcciones individuales.
-          </div>
+          <div class="def-box"><div class="def-label">Cómo funciona</div>Se buscan los bits más significativos comunes entre varios prefijos para crear una entrada agregada que los cubra a todos. Por ejemplo, 4 redes /22 se pueden agregar en una sola /20.</div>
           <p><strong>Impacto real:</strong> la agregación puede reducir las tablas de los routers globales en aproximadamente <strong>200.000 prefijos</strong>. Sin esto, Internet a escala actual sería imposible.</p>
-          <div class="warn-box">
-            <div class="warn-label">Desafío de la agregación</div>
-            La agregación perfecta requiere que los rangos de IP estén asignados de forma geográficamente coherente. En la práctica, el multihoming y las migraciones de empresas entre proveedores generan "agujeros" en los bloques que requieren entradas más específicas.
-          </div>
         </div>
       </div>
     </div>
@@ -1933,122 +611,25 @@ Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
       <div class="detail-hero">
         <div class="detail-hero-icon">🗺️</div>
         <div class="detail-title">WAN Jerárquica y Protocolo OSPF</div>
-        <div class="detail-intro">Las WAN grandes no pueden usar protocolos de estado de enlace "planos" — la cantidad de LSPs inundaría la red. La solución: <strong>jerarquía</strong>. Dividir la red en áreas donde cada router mantiene vista detallada de su área y resúmenes del resto. OSPF implementa esto con un Área Dorsal (Área 0) como eje central.</div>
+        <div class="detail-intro">Las WAN grandes no pueden usar protocolos de estado de enlace "planos". La solución: <strong>jerarquía</strong>. Dividir la red en áreas con un Área Dorsal (Área 0) como eje central.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📏</div>
-          <div class="block-title">¿Por qué jerarquía? El problema de escala</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">👥</div><div class="block-title">Tipos de routers en la jerarquía</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Un protocolo de estado de enlace plano en una WAN grande genera:</p>
-          <ul>
-            <li>Explosión de paquetes LSP (cada router anuncia su estado a todos)</li>
-            <li>Consumo excesivo de memoria (cada router guarda la topología completa)</li>
-            <li>Alta demanda computacional para Dijkstra en grafos enormes</li>
-          </ul>
-          <div class="def-box">
-            <div class="def-label">Principio rector de la jerarquía</div>
-            Cada router mantiene una <strong>visión detallada de su propia región/área</strong> y una <strong>visión resumida de las demás</strong>. Esto permite escalar sin perder la capacidad de calcular rutas óptimas.
-          </div>
+          <table class="styled-table"><thead><tr><th>Tipo</th><th>Definición</th><th>Rol</th></tr></thead><tbody><tr><td><strong>Router Interno</strong></td><td>Solo tiene enlaces dentro de su propia área</td><td>Ejecuta protocolo de estado de enlace interno</td></tr><tr><td><strong>Router de Borde (ABR)</strong></td><td>Tiene enlaces en más de un área</td><td>Genera resúmenes de su área, conecta áreas</td></tr><tr><td><strong>Router Designado (DR)</strong></td><td>Elegido en cada LAN multi-acceso</td><td>Centraliza la sincronización, reduce O(n²) → O(n)</td></tr><tr><td><strong>Router Dorsal</strong></td><td>Tiene al menos un enlace en el Área 0</td><td>Propaga información entre todas las áreas</td></tr></tbody></table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">👥</div>
-          <div class="block-title">Tipos de routers en la jerarquía</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔄</div><div class="block-title">Sincronización de la BDEE — Los 4 tipos de paquetes</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <table class="styled-table">
-            <thead><tr><th>Tipo</th><th>Definición</th><th>Rol</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Router Interno</strong></td><td>Solo tiene enlaces dentro de su propia área</td><td>Ejecuta protocolo de estado de enlace interno, ve solo su área</td></tr>
-              <tr><td><strong>Router de Borde (EBA/ABR)</strong></td><td>Tiene enlaces en más de un área</td><td>Genera resúmenes de su área, conecta áreas entre sí</td></tr>
-              <tr><td><strong>Router Designado (DR)</strong></td><td>Elegido en cada LAN multi-acceso</td><td>Centraliza la sincronización, reduce comunicaciones O(n²) → O(n)</td></tr>
-              <tr><td><strong>Router Dorsal</strong></td><td>Tiene al menos un enlace en el Área 0</td><td>Propaga información entre todas las áreas via el backbone</td></tr>
-            </tbody>
-          </table>
+          <table class="styled-table"><thead><tr><th>Paquete</th><th>Función</th></tr></thead><tbody><tr><td><strong>PDBD</strong> (Descripción de BD)</td><td>Resumen de los LSPs que posee un router</td></tr><tr><td><strong>PPEE</strong> (Pedido de EE)</td><td>Solicitar LSPs específicos que faltan o están desactualizados</td></tr><tr><td><strong>PAEE</strong> (Actualización de EE)</td><td>Enviar los LSPs completos solicitados</td></tr><tr><td><strong>PCEE</strong> (Confirmación de EE)</td><td>Confirmar recepción para garantizar inundación confiable</td></tr></tbody></table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">👁️</div>
-          <div class="block-title">El grafo híbrido — Qué ve cada router</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🔷</div><div class="block-title">Dijkstra modificado — DAG en lugar de árbol</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <p>Cada router construye un grafo global híbrido para ejecutar Dijkstra:</p>
-          <ol class="steps">
-            <li><strong>Visión detallada:</strong> el grafo completo de la región propia (cada enlace, cada costo).</li>
-            <li><strong>Visión resumida:</strong> para las otras áreas, solo ve los routers de borde y los costos mínimos entre ellos (o hacia las LANs internas). No ve la topología interna ajena.</li>
-            <li><strong>Resumen del backbone (Área 0):</strong> costos para llegar de los EBAs de un área a los EBAs de otras áreas, pasando por el Área 0.</li>
-          </ol>
-          <table class="styled-table">
-            <thead><tr><th>Tipo de router</th><th>Ve en detalle</th><th>Ve en resumen</th></tr></thead>
-            <tbody>
-              <tr><td>Interno de Área A</td><td>Topología completa de A</td><td>Resúmenes de otras áreas + resumen del backbone</td></tr>
-              <tr><td>Dorsal (no EBA)</td><td>Topología completa del Área 0</td><td>Resúmenes de todas las demás áreas</td></tr>
-              <tr><td>EBA (Área A + Área 0)</td><td>Topología completa de A y del Área 0</td><td>Resúmenes de las áreas donde no participa</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔄</div>
-          <div class="block-title">Sincronización de la BDEE — Los 4 tipos de paquetes</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>Todos los routers de un área deben tener la misma Base de Datos de Estado de Enlace (BDEE) para que sus tablas de reenvío sean coherentes.</p>
-          <table class="styled-table">
-            <thead><tr><th>Paquete</th><th>Función</th></tr></thead>
-            <tbody>
-              <tr><td><strong>PDBD</strong> (Descripción de BD)</td><td>Resumen de los LSPs que posee un router. "Yo tengo estos LSPs con estas versiones"</td></tr>
-              <tr><td><strong>PPEE</strong> (Pedido de EE)</td><td>Solicitar LSPs específicos que faltan o están desactualizados</td></tr>
-              <tr><td><strong>PAEE</strong> (Actualización de EE)</td><td>Enviar los LSPs completos solicitados</td></tr>
-              <tr><td><strong>PCEE</strong> (Confirmación de EE)</td><td>Confirmar recepción para garantizar inundación confiable</td></tr>
-            </tbody>
-          </table>
-          <div class="info-box">
-            <div class="info-label">Router Designado (DR) en LANs</div>
-            En una LAN con N routers, sin DR habría N×(N-1)/2 sincronizaciones = O(n²). Con DR, todos se sincronizan solo con el DR = N-1 sincronizaciones = O(n). Reducción masiva de complejidad.
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔷</div>
-          <div class="block-title">Dijkstra modificado — DAG en lugar de árbol</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <div class="def-box">
-            <div class="def-label">La diferencia clave</div>
-            El Dijkstra clásico guarda UN solo predecesor por nodo → árbol de caminos mínimos.<br>
-            OSPF guarda el <strong>conjunto de todos los predecesores</strong> que resultan en el costo mínimo → Grafo Acíclico Dirigido (DAG) de caminos mínimos.
-          </div>
-          <p>Esto permite <strong>múltiples rutas de igual costo</strong> hacia un mismo destino, habilitando el balanceo de carga (ECMP — Equal Cost Multi-Path).</p>
-          <p><strong>Construcción de la tabla de reenvío desde el DAG:</strong></p>
-          <ol class="steps">
-            <li>Para un destino d, identificar todos sus predecesores en el DAG.</li>
-            <li>Ascender recursivamente por el grafo hasta llegar a los vecinos directos del router origen.</li>
-            <li>Todos los vecinos directos que formen parte de algún camino mínimo hacia d → registrarlos como <strong>nexthops válidos</strong>.</li>
-          </ol>
-          <div class="info-box">
-            <div class="info-label">Características adicionales de OSPF</div>
-            • Costos configurados manualmente por el admin (no estimados automáticamente)<br>
-            • Inundación confiable con acuse de recibo (PCEE)<br>
-            • No requiere sincronización global periódica — solo ante cambios<br>
-            • Refresco suave de LSPs cada 30 minutos
-          </div>
+          <div class="def-box"><div class="def-label">La diferencia clave</div>El Dijkstra clásico guarda UN solo predecesor por nodo → árbol.<br>OSPF guarda el <strong>conjunto de todos los predecesores</strong> que resultan en costo mínimo → DAG (Grafo Acíclico Dirigido).</div>
+          <p>Esto permite <strong>múltiples rutas de igual costo</strong> hacia un mismo destino, habilitando balanceo de carga (ECMP — Equal Cost Multi-Path).</p>
         </div>
       </div>
     </div>
@@ -2061,130 +642,27 @@ Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
       <div class="detail-hero">
         <div class="detail-hero-icon">🛰️</div>
         <div class="detail-title">Enrutamiento en Interredes — BGP</div>
-        <div class="detail-intro">El enrutamiento exterior (entre redes distintas / Sistemas Autónomos) no busca la ruta globalmente óptima — eso es imposible. Cada red define sus propias métricas. BGP conecta Sistemas Autónomos (SA) mediante políticas administrativas que reflejan acuerdos comerciales y soberanía de red.</div>
+        <div class="detail-intro">El enrutamiento exterior entre Sistemas Autónomos no busca la ruta globalmente óptima. BGP conecta SAs mediante políticas administrativas que reflejan acuerdos comerciales y soberanía de red.</div>
       </div>
-
       <div class="block open">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🏛️</div>
-          <div class="block-title">El modelo de dos niveles — IGP vs BGP</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🏛️</div><div class="block-title">El modelo de dos niveles — IGP vs BGP</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
           <div class="compare-grid">
-            <div class="compare-col">
-              <div class="compare-col-title">IGP / PPEI (ej: OSPF, IS-IS)</div>
-              <ul>
-                <li>Opera <strong>dentro</strong> de un Sistema Autónomo</li>
-                <li>Gestiona la topología interna</li>
-                <li>Cada SA usa el suyo propio</li>
-                <li>Métricas internas (costo de enlace)</li>
-                <li>No se expone al exterior</li>
-              </ul>
-            </div>
-            <div class="compare-col cyan">
-              <div class="compare-col-title">EGP / PPEE — BGP</div>
-              <ul>
-                <li>Opera <strong>entre</strong> Sistemas Autónomos</li>
-                <li>Protocolo común para toda Internet</li>
-                <li>Trabaja con <strong>prefijos</strong>, no destinos individuales</li>
-                <li>Sesiones TCP punto a punto (puerto 179)</li>
-                <li>Guiado por políticas administrativas</li>
-              </ul>
-            </div>
-          </div>
-          <div class="warn-box">
-            <div class="warn-label">Limitaciones estructurales del enrutamiento exterior</div>
-            <strong>Ocultación:</strong> los proveedores actúan como "cajas negras" — no revelan topología interna ni todas sus relaciones.<br>
-            <strong>Soberanía:</strong> las puertas de enlace tienen derecho político a decidir qué tráfico permiten pasar.<br>
-            <strong>Visibilidad parcial:</strong> un router sabe que puede llegar a un destino, pero desconoce el camino interno de otras redes.
+            <div class="compare-col"><div class="compare-col-title">IGP / PPEI (ej: OSPF, IS-IS)</div><ul><li>Opera <strong>dentro</strong> de un Sistema Autónomo</li><li>Métricas internas (costo de enlace)</li><li>No se expone al exterior</li></ul></div>
+            <div class="compare-col cyan"><div class="compare-col-title">EGP / PPEE — BGP</div><ul><li>Opera <strong>entre</strong> Sistemas Autónomos</li><li>Protocolo común para toda Internet</li><li>Sesiones TCP punto a punto (puerto 179)</li><li>Guiado por políticas administrativas</li></ul></div>
           </div>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">📨</div>
-          <div class="block-title">Mensajes BGP — Los 4 tipos</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">📨</div><div class="block-title">Mensajes BGP — Los 4 tipos</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <table class="styled-table">
-            <thead><tr><th>Mensaje</th><th>Función</th><th>Cuándo se usa</th></tr></thead>
-            <tbody>
-              <tr><td><strong>OPEN</strong></td><td>Inicia la sesión BGP</td><td>Al establecer la conexión TCP. Negocia versión, Hold Time, Router ID</td></tr>
-              <tr><td><strong>UPDATE</strong></td><td>El mensaje central — anuncia o retira rutas</td><td>Cuando hay cambios: nuevos prefijos disponibles o rutas que ya no son válidas</td></tr>
-              <tr><td><strong>KEEPALIVE</strong></td><td>Mantiene la sesión activa</td><td>Cuando no hay UPDATEs para enviar pero la sesión debe continuar</td></tr>
-              <tr><td><strong>NOTIFICATION</strong></td><td>Informa errores críticos</td><td>Ante error grave — cierra la conexión inmediatamente</td></tr>
-            </tbody>
-          </table>
+          <table class="styled-table"><thead><tr><th>Mensaje</th><th>Función</th></tr></thead><tbody><tr><td><strong>OPEN</strong></td><td>Inicia la sesión BGP, negocia versión, Hold Time, Router ID</td></tr><tr><td><strong>UPDATE</strong></td><td>El mensaje central — anuncia o retira rutas ante cambios</td></tr><tr><td><strong>KEEPALIVE</strong></td><td>Mantiene la sesión activa cuando no hay UPDATEs</td></tr><tr><td><strong>NOTIFICATION</strong></td><td>Informa errores críticos — cierra la conexión</td></tr></tbody></table>
         </div>
       </div>
-
       <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🗃️</div>
-          <div class="block-title">RIBs — Las 4 bases de datos de BGP</div>
-          <div class="block-arrow">▼</div>
-        </div>
+        <div class="block-header"><div class="block-icon">🏆</div><div class="block-title">Proceso de selección de rutas BGP — Los 8 criterios</div><div class="block-arrow">▼</div></div>
         <div class="block-body">
-          <ol class="steps">
-            <li><strong>Adj-RIB-In:</strong> almacena todas las rutas recibidas de cada vecino <em>antes</em> de aplicar filtros o políticas de entrada. Foto cruda de lo que llegó.</li>
-            <li><strong>Loc-RIB:</strong> la "tabla local" — contiene la mejor ruta seleccionada para cada destino tras aplicar políticas de entrada y el algoritmo de selección. Es la decisión tomada.</li>
-            <li><strong>Adj-RIB-Out:</strong> rutas preparadas para anunciar a vecinos específicos, tras aplicar políticas de salida. Puede diferir de Loc-RIB si se aplican filtros de exportación.</li>
-            <li><strong>RIB del Sistema:</strong> donde se instalan las rutas de Loc-RIB para el reenvío real de paquetes. Aquí opera el plano de datos.</li>
-          </ol>
-          <div class="info-box">
-            <div class="info-label">Flujo de información</div>
-            Vecino → Adj-RIB-In → [políticas entrada] → Loc-RIB → [políticas salida] → Adj-RIB-Out → Vecino
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🏆</div>
-          <div class="block-title">Proceso de selección de rutas BGP — Los 8 criterios</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>Cuando hay múltiples rutas candidatas hacia un mismo prefijo, BGP aplica este algoritmo determinista y jerárquico:</p>
-          <table class="styled-table">
-            <thead><tr><th>#</th><th>Criterio</th><th>Preferencia</th><th>Descripción</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td><strong>Next-Hop</strong></td><td>Alcanzable</td><td>Debe ser alcanzable en la tabla de enrutamiento local. Si no → descartada.</td></tr>
-              <tr><td>2</td><td><strong>LOCAL_PREF</strong></td><td>Valor más alto</td><td>Política interna del SA. Define preferencia de salida.</td></tr>
-              <tr><td>3</td><td><strong>AS_PATH</strong></td><td>Camino más corto</td><td>Menor número de saltos entre SAs. Previene bucles.</td></tr>
-              <tr><td>4</td><td><strong>MED</strong></td><td>Valor más bajo</td><td>Sugerencia del vecino para entrar a su red por determinado punto.</td></tr>
-              <tr><td>5</td><td><strong>eBGP > iBGP</strong></td><td>eBGP primero</td><td>Rutas aprendidas de vecinos externos preferidas sobre internas.</td></tr>
-              <tr><td>6</td><td><strong>Costo IGP</strong></td><td>Menor costo</td><td>"Hot-potato routing": elegir la salida más cercana internamente.</td></tr>
-              <tr><td>7</td><td><strong>Antigüedad</strong></td><td>Ruta más vieja</td><td>Preferir la ruta más estable (antigua) para reducir cambios.</td></tr>
-              <tr><td>8</td><td><strong>Router ID / IP</strong></td><td>ID más baja</td><td>Desempate final determinista.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="block">
-        <div class="block-header" onclick="toggleBlock(this)">
-          <div class="block-icon">🔌</div>
-          <div class="block-title">Construcción de la tabla de reenvío desde BGP</div>
-          <div class="block-arrow">▼</div>
-        </div>
-        <div class="block-body">
-          <p>Una vez seleccionada la mejor ruta BGP, hay que traducirla en una acción física concreta:</p>
-          <ol class="steps">
-            <li><strong>Identificar NEXT-HOP:</strong> la dirección IP del siguiente salto indicada en el atributo BGP.</li>
-            <li><strong>Consultar OSPF:</strong> usar el protocolo interno para encontrar el camino más corto hacia ese NEXT-HOP dentro del SA.</li>
-            <li><strong>Asociar puerto de salida:</strong> identificar el puerto físico de salida asociado a ese camino interno.</li>
-            <li><strong>Instalar entrada:</strong> crear la entrada en la tabla de reenvío: (Prefijo de destino → Puerto de salida).</li>
-          </ol>
-          <div class="info-box">
-            <div class="info-label">Relaciones entre SAs y qué anuncian</div>
-            <strong>Proveedor → Consumidor:</strong> el proveedor anuncia TODOS los destinos de la interred<br>
-            <strong>Consumidor → Proveedor:</strong> el consumidor anuncia SOLO sus rutas internas<br>
-            <strong>Peering:</strong> cada SA anuncia SOLO los destinos residentes en su propia red
-          </div>
+          <table class="styled-table"><thead><tr><th>#</th><th>Criterio</th><th>Preferencia</th></tr></thead><tbody><tr><td>1</td><td><strong>Next-Hop</strong></td><td>Debe ser alcanzable</td></tr><tr><td>2</td><td><strong>LOCAL_PREF</strong></td><td>Valor más alto</td></tr><tr><td>3</td><td><strong>AS_PATH</strong></td><td>Camino más corto (menos SAs)</td></tr><tr><td>4</td><td><strong>MED</strong></td><td>Valor más bajo</td></tr><tr><td>5</td><td><strong>eBGP > iBGP</strong></td><td>eBGP primero</td></tr><tr><td>6</td><td><strong>Costo IGP</strong></td><td>Menor costo (hot-potato routing)</td></tr><tr><td>7</td><td><strong>Antigüedad</strong></td><td>Ruta más vieja (más estable)</td></tr><tr><td>8</td><td><strong>Router ID / IP</strong></td><td>ID más baja (desempate final)</td></tr></tbody></table>
         </div>
       </div>
     </div>
@@ -2196,14 +674,267 @@ Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
       <button class="detail-back" onclick="showPage('home')">← Volver al inicio</button>
       <div class="detail-hero special-hero">
         <div class="detail-hero-icon">📝</div>
-        <div class="detail-title">Guía Práctica</div>
-        <div class="detail-intro">Esta sección es exclusiva para los ejercicios de la guía práctica. Compartila en el chat y la agrego acá con el mismo formato interactivo.</div>
+        <div class="detail-title">Guía Práctica — Capa de Red Parte 2</div>
+        <div class="detail-intro">Ejercicios resueltos de la práctica de capa de red. Cada ejercicio muestra el enunciado y la guía de resolución con los conceptos clave que se aplican. Hacé clic en cada uno para expandir.</div>
       </div>
-      <div class="placeholder-card">
-        <div class="placeholder-icon">📂</div>
-        <div class="placeholder-title">Guía práctica no cargada aún</div>
-        <p class="placeholder-text">No recibí el archivo de la guía práctica. Compartila en el chat (como texto, PDF o imagen) y la incorporo acá con ejercicios resueltos, fórmulas y ejemplos paso a paso — en el mismo estilo que el resto del sitio.</p>
+
+      <!-- EJ 1 -->
+      <div class="ej-block open">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 1</div>
+          <div class="ej-title">Fragmentación IP — Campos DF, MF y Desplazamiento en 3 enlaces</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Host A → R1 → R2 → Host B. Mensaje TCP: 900 B datos + 20 B encabezado TCP. Encabezado IP = 20 B. MTUs: A-R1 = 1024 B (enc. trama 14 B), R1-R2 = 512 B (enc. 8 B), R2-B = 512 B (enc. 12 B).</div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Cálculo del payload disponible por enlace</div>
+            <p>Payload IP disponible = MTU de trama − encabezado de trama − encabezado IP:</p>
+            <ul>
+              <li><strong>Enlace A-R1:</strong> 1024 − 14 − 20 = <em>990 B</em> de payload IP disponibles</li>
+              <li><strong>Enlace R1-R2:</strong> 512 − 8 − 20 = <em>484 B</em> de payload IP disponibles</li>
+              <li><strong>Enlace R2-B:</strong> 512 − 12 − 20 = <em>480 B</em> de payload IP disponibles</li>
+            </ul>
+            <p>El datagrama original tiene 900 + 20 (TCP) = <strong>920 B de datos IP</strong> (payload de IP).</p>
+          </div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Enlace A → R1 (payload máx. 990 B)</div>
+            <p>920 B ≤ 990 B → <strong>no se fragmenta</strong>. Se transmite un único datagrama IP.</p>
+            <div class="formula">Paquete 1: Long. total = 940, ID = x, DF = 0, MF = 0, Desplaz. = 0</div>
+          </div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Enlace R1 → R2 (payload máx. 484 B)</div>
+            <p>920 B > 484 B → hay que fragmentar. El offset se mide en unidades de 8 bytes, por eso el tamaño de fragmento debe ser múltiplo de 8: 484 → redondear a <strong>480 B</strong> (múltiplo de 8).</p>
+            <ul>
+              <li><strong>Fragmento 1:</strong> 480 B de datos → Long. total = 480+20 = 500, MF = 1, Offset = 0</li>
+              <li><strong>Fragmento 2:</strong> 920 − 480 = 440 B de datos → Long. total = 440+20 = 460, MF = 0, Offset = 480/8 = 60</li>
+            </ul>
+            <div class="formula">Frag 1: Long=500, ID=x, DF=0, MF=1, Offset=0
+Frag 2: Long=460, ID=x, DF=0, MF=0, Offset=60</div>
+          </div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Enlace R2 → B (payload máx. 480 B)</div>
+            <p>Los fragmentos ya llegan con 480 B y 440 B de datos respectivamente. Ambos caben (480 ≤ 480 y 440 ≤ 480), así que <strong>no se fragmenta más</strong>. Los mismos dos fragmentos se reenvían sin cambios.</p>
+            <div class="ok-box"><div class="ok-label">Regla clave</div>El campo ID es el mismo para todos los fragmentos del mismo datagrama original. El reensamblado ocurre solo en el host destino (fragmentación no transparente en IPv4).</div>
+          </div>
+        </div>
       </div>
+
+      <!-- EJ 2 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 2</div>
+          <div class="ej-title">Algoritmo de reensamblado de fragmentos IP en el destino</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Describir una manera de reensamblar fragmentos IP en el destino. Asumir que llegaron todos los fragmentos.</div>
+          <div class="ej-section">
+            <div class="ej-section-title">Pseudocódigo de reensamblado</div>
+          </div>
+          <div class="formula">// Estructura de datos: tabla indexada por ID de datagrama
+tabla[ID] = {
+  buffer[]: array de bytes,
+  fragmentos_recibidos: set de offsets,
+  total_bytes: -1 (desconocido hasta recibir MF=0)
+}
+
+Al recibir un fragmento:
+  id = encabezado.identification
+  offset_bytes = encabezado.fragment_offset * 8
+  datos = payload del fragmento
+  longitud_datos = encabezado.total_length - 20
+
+  // Copiar datos en posición correcta
+  tabla[id].buffer[offset_bytes .. offset_bytes+longitud_datos] = datos
+  tabla[id].fragmentos_recibidos.agregar(offset_bytes)
+
+  // Si es el último fragmento (MF=0), conocemos el tamaño total
+  si encabezado.MF == 0:
+    tabla[id].total_bytes = offset_bytes + longitud_datos
+
+  // Verificar si tenemos todo
+  si tabla[id].total_bytes != -1:
+    bytes_acumulados = suma de todos los tamaños de fragmentos recibidos
+    si bytes_acumulados == tabla[id].total_bytes:
+      entregar tabla[id].buffer a la capa superior
+      eliminar tabla[id] de la tabla</div>
+          <div class="info-box"><div class="info-label">Puntos clave del algoritmo</div>El campo ID común permite asociar todos los fragmentos. El offset indica dónde ubicar cada fragmento en el buffer. El bit MF=0 del último fragmento revela el tamaño total esperado. Solo cuando se acumulan todos los bytes se entrega el datagrama completo.</div>
+        </div>
+      </div>
+
+      <!-- EJ 3 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 3</div>
+          <div class="ej-title">Agregación de prefijos — 57.6.96.0/21 a 57.6.120.0/21</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Subredes: 57.6.96.0/21, 57.6.104.0/21, 57.6.112.0/21, 57.6.120.0/21. ¿Pueden agregarse si usan la misma línea de salida?</div>
+          <div class="ej-section">
+            <div class="ej-section-title">Conversión del tercer octeto a binario</div>
+          </div>
+          <div class="formula">57.6.96.0/21  → tercer octeto:  96 = 0110 0000
+57.6.104.0/21 → tercer octeto: 104 = 0110 1000
+57.6.112.0/21 → tercer octeto: 112 = 0111 0000
+57.6.120.0/21 → tercer octeto: 120 = 0111 1000
+
+Bits comunes desde la izquierda: 011x xxxx → los primeros 5 bits son comunes</div>
+          <p>Los primeros dos octetos (57.6) son iguales para todos. En el tercer octeto, los primeros 5 bits son comunes: <strong>011</strong> y luego varían. Esto da un prefijo de <strong>5 bits adicionales</strong> en el tercer octeto, es decir: 8 + 8 + 5 = <strong>/21... no</strong>, retomando: los 4 prefijos /21 juntos tienen sus 5 bits de prefijo en el tercer octeto, resultando en los primeros 8+8+5 = 21-3... veamos de otra forma.</p>
+          <div class="formula">Cuatro /21 consecutivos pueden agregarse en un /19:
+(4 redes de tamaño /21 = 2² × /21 → sube 2 bits → /19)
+
+Prefijo agregado: 57.6.96.0/19
+
+Verificación: 57.6. 011 00000 .0/19
+96  = 0110 0000 ✓
+104 = 0110 1000 ✓
+112 = 0111 0000 ✓
+120 = 0111 1000 ✓
+Todos tienen los primeros 19 bits iguales.</div>
+          <div class="ok-box"><div class="ok-label">Respuesta</div><strong>Sí, se pueden agregar</strong>. El prefijo resultante es <strong>57.6.96.0/19</strong>. Las 4 redes /21 son contiguas y comparten los primeros 19 bits de sus direcciones.</div>
+        </div>
+      </div>
+
+      <!-- EJ 4 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 4</div>
+          <div class="ej-title">Gap de 1024 direcciones en bloque agregado — Estrategia de tabla</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Bloque 29.18.0.0/17 (0.0 a 128.255). Gap de 1024 dir. desde 29.18.60.0 hasta 29.18.63.255, asignadas a una línea de salida diferente. ¿Hay que desagregar o hay alternativa?</div>
+          <div class="ej-section">
+            <div class="ej-section-title">Análisis del problema</div>
+            <p>Desagregar el bloque /17 en sus constituyentes sería muy costoso: implicaría decenas de entradas en la tabla de reenvío.</p>
+            <p><strong>Solución alternativa más eficiente:</strong> mantener el prefijo agregado <strong>29.18.0.0/17</strong> para la línea de salida original, y agregar una entrada más específica para el gap:</p>
+            <ul>
+              <li>29.18.60.0 a 29.18.63.255 = 1024 direcciones = /22</li>
+              <li>Agregar entrada: <strong>29.18.60.0/22</strong> → nueva línea de salida</li>
+            </ul>
+          </div>
+          <div class="formula">Tabla de reenvío:
+  29.18.60.0/22 → nueva línea de salida   (más específico)
+  29.18.0.0/17  → línea de salida original (más general)</div>
+          <div class="ok-box"><div class="ok-label">Clave: Longest Prefix Match (LPM)</div>El algoritmo IPv4 elige siempre la entrada con la <strong>máscara más larga</strong> (red más pequeña) cuando coinciden múltiples entradas. Así, las IPs del gap de 29.18.60.0 a 29.18.63.255 hacen match con /22 (más específico) y van a la nueva línea, mientras todo el resto del /17 sigue por la línea original. <strong>No es necesario desagregar.</strong></div>
+        </div>
+      </div>
+
+      <!-- EJ 5 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 5</div>
+          <div class="ej-title">Red de Regiones Jerárquica — Grafo de 5E, resúmenes, paquetes LSP</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Red de 5 regiones. Se pide: (1) qué grafo construye 5E, (2) qué hace 5A al recibir el resumen de la región 2, (3) paquete LSP de 5E, (4) paquete LSP de resumen que construye 2A.</div>
+          <div class="ej-section">
+            <div class="ej-section-title">1 — Grafo de 5E (router interno de Región 5)</div>
+            <p>Un router <strong>interno</strong> construye el grafo completo de su propia región y recibe <em>resúmenes</em> de las otras regiones. Por eso el grafo de 5E tiene dos partes:</p>
+            <ul>
+              <li><strong>Parte detallada:</strong> topología completa de la Región 5 (todos los routers 5A, 5B, 5C, 5D, 5E con sus enlaces y costos).</li>
+              <li><strong>Parte resumida:</strong> para las Regiones 1, 2, 3, 4 → solo un nodo ficticio por región y el costo mínimo para llegar al router de borde de esa región (que llega como resumen vía el router de borde de Región 5).</li>
+            </ul>
+          </div>
+          <div class="ej-section">
+            <div class="ej-section-title">2 — 5A recibe resumen de Región 2</div>
+            <p>El resumen de la Región 2 llega a 5A como un paquete LSP de resumen (construido por el router de borde de la Región 2). 5A lo incorpora a su grafo como un nodo abstracto de la Región 2, con el costo mínimo anunciado hacia esa región. Este nodo abstracto se usa en Dijkstra para calcular rutas hacia destinos de la Región 2.</p>
+          </div>
+          <div class="ej-section">
+            <div class="ej-section-title">3 — Paquete LSP del enrutador 5E</div>
+            <p>El LSP de un router interno anuncia sus vecinos directos y los costos de los enlaces hacia ellos.</p>
+            <div class="formula">LSP de 5E:
+  Origen: 5E
+  Vecinos: [(4C, costo), (5D, costo), (5A, costo)]
+  Número de secuencia: N
+  Tiempo de vida: TTL</div>
+          </div>
+          <div class="ej-section">
+            <div class="ej-section-title">4 — LSP de resumen que construye 2A</div>
+            <p>Un router de borde (2A) construye un LSP de resumen que anuncia los destinos de su región al resto de la WAN.</p>
+            <div class="formula">LSP de Resumen de 2A (para la Región 2):
+  Origen: 2A (router de borde)
+  Destinos internos de Región 2: [(2B, costo), (2C, costo), (2D, costo)]
+  Costos: mínimos desde 2A hasta cada destino interno
+  (calculados con Dijkstra dentro de la Región 2)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 6 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 6</div>
+          <div class="ej-title">OSPF — Tareas de un enrutador de borde de área (ABR)</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Para OSPF, explicar qué tareas realiza un enrutador de borde de área (Area Border Router / ABR).</div>
+          <ul>
+            <li><strong>Participación en múltiples áreas:</strong> mantiene una Base de Datos de Estado de Enlace (BDEE) separada por cada área a la que pertenece, incluyendo el Área 0.</li>
+            <li><strong>Construcción de LSAs de resumen (Type 3 Summary LSA):</strong> calcula los costos mínimos hacia los destinos internos de cada área y anuncia esos resúmenes a las otras áreas. Los routers internos de otras áreas ven solo el resumen, no la topología interna.</li>
+            <li><strong>Inundación selectiva:</strong> inunda los LSAs de una área solo dentro de esa área. Nunca propaga LSAs internos de un área a otra (evita explosión de tráfico de control).</li>
+            <li><strong>Cálculo de rutas inter-área:</strong> ejecuta Dijkstra (modificado, produciendo un DAG) sobre el grafo híbrido: topología detallada de sus áreas + resúmenes de las demás.</li>
+            <li><strong>Construcción de tabla de reenvío:</strong> para destinos en otras áreas, identifica el nexthop correcto usando el camino calculado hacia el ABR de destino vía el Área 0.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- EJ 9 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 9</div>
+          <div class="ej-title">BGP — Tareas de un enrutador de borde de SA (ASBR)</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">Para BGP, explicar qué tareas realiza un enrutador BGP (enrutador de borde de sistema autónomo).</div>
+          <ul>
+            <li><strong>Establecer sesiones eBGP:</strong> crea y mantiene sesiones TCP (puerto 179) con enrutadores de borde de otros SAs (peers externos).</li>
+            <li><strong>Establecer sesiones iBGP:</strong> propaga dentro del propio SA las rutas aprendidas del exterior, comunicándose con otros enrutadores BGP internos.</li>
+            <li><strong>Mantener las RIBs:</strong> gestiona la Adj-RIB-In (rutas recibidas), la Loc-RIB (mejor ruta seleccionada) y la Adj-RIB-Out (rutas a anunciar a vecinos).</li>
+            <li><strong>Aplicar políticas de entrada y salida:</strong> filtra y modifica atributos (LOCAL_PREF, MED, AS_PATH) según la política administrativa del SA.</li>
+            <li><strong>Seleccionar la mejor ruta:</strong> aplica el algoritmo de selección de BGP (8 criterios) para elegir la mejor ruta hacia cada prefijo.</li>
+            <li><strong>Anunciar y retirar rutas:</strong> envía mensajes UPDATE con nuevas rutas accesibles o retira rutas que ya no son válidas.</li>
+            <li><strong>Construir la tabla de reenvío:</strong> instala las mejores rutas BGP, resolviendo el NEXT-HOP via OSPF interno para encontrar el puerto de salida correcto.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- EJ 10 -->
+      <div class="ej-block">
+        <div class="ej-header">
+          <div class="ej-num">Ej. 10</div>
+          <div class="ej-title">BGP — Selección de ruta y tabla de reenvío para prefijo x</div>
+          <div class="ej-arrow">▼</div>
+        </div>
+        <div class="ej-body">
+          <div class="ej-enunciado">AS1, AS2, AS3, AS4. Todos ejecutan OSPF internamente y usan eBGP/iBGP entre SAs. El enrutador 1c aprende sobre el prefijo x.</div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Ítem 1 — ¿I = hacia 3a o hacia 1a?</div>
+            <p>Sin el enlace punteado AS2-AS4, la única ruta hacia x (que está en AS4) es a través de AS3: <strong>1c → 1a → 3a → AS4</strong>. Por lo tanto <strong>I = 1a</strong> (el siguiente salto dentro del AS1 para salir hacia AS3 es 1a).</p>
+          </div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Ítem 2 — Con enlace AS2-AS4, ¿I = 3a o 1a?</div>
+            <p>Ahora hay dos rutas hacia x: vía AS3 (path = AS3, AS4) y vía AS2 (path = AS2, AS4). Ambas tienen longitud de AS_PATH = 2. BGP aplica los criterios en orden — si LOCAL_PREF y MED son iguales, se usa el AS_PATH más corto. Como empatan en longitud, se sigue con el criterio 6: <strong>costo IGP hacia el NEXT-HOP</strong> (hot-potato routing). 1c elige la salida más cercana según OSPF. La respuesta depende del grafo de AS1, pero <strong>el criterio determinante es el costo IGP menor</strong>.</p>
+          </div>
+
+          <div class="ej-section">
+            <div class="ej-section-title">Ítem 3 — Con AS5 intermedio, ¿I = 3a o 1a?</div>
+            <p>Rutas: vía AS2: path = AS2, AS5, AS4 (longitud 3). Vía AS3: path = AS3, AS4 (longitud 2). BGP elige <strong>AS_PATH más corto → vía AS3</strong>, por lo tanto <strong>I = 1a</strong> (el salto hacia AS3 dentro de AS1).</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2213,54 +944,268 @@ Segmentos de 1500 B, tasa = 10 Mbps, T = 30 s
       <button class="detail-back" onclick="showPage('home')">← Volver al inicio</button>
       <div class="detail-hero special-hero">
         <div class="detail-hero-icon">🎯</div>
-        <div class="detail-title">Modelo de Parcial</div>
-        <div class="detail-intro">Sección exclusiva para el modelo de examen. Cada pregunta con su resolución detallada y los conceptos clave que evalúa.</div>
+        <div class="detail-title">Modelo de Parcial — Resuelto</div>
+        <div class="detail-intro">10 preguntas de opción múltiple del examen modelo, con las respuestas correctas marcadas y explicación de por qué cada opción es correcta o incorrecta. Hacé clic en las opciones para simular el examen.</div>
       </div>
-      <div class="placeholder-card">
-        <div class="placeholder-icon">🎯</div>
-        <div class="placeholder-title">Modelo de parcial no cargado aún</div>
-        <p class="placeholder-text">No recibí el modelo de parcial. Compartilo en el chat y lo agrego acá — cada pregunta con resolución, los errores típicos a evitar y los conceptos que te conviene repasar antes de rendir.</p>
+
+      <div class="score-bar">
+        <div>
+          <div class="score-label">PUNTAJE ACUMULADO</div>
+          <div class="score-val" id="scoreVal">0 / 10</div>
+        </div>
+        <button class="score-reset" onclick="resetQuiz()">↺ Reiniciar</button>
       </div>
+
+      <!-- PARTE I -->
+      <div class="section-title" style="margin-bottom:20px;font-size:20px;"><div class="icon">🌊</div>Parte I — Capa de Transporte</div>
+
+      <!-- Q1 -->
+      <div class="quiz-q" data-correct="A" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">01</div>
+          <div class="quiz-text">¿Cuál afirmación distingue correctamente control de flujo y control de congestión en TCP? <span class="quiz-badge badge-transport">Transporte</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>Control de flujo evita desbordar al receptor; control de congestión evita sobrecargar la red.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>Control de flujo protege a la red; control de congestión protege al receptor.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Ambos mecanismos son equivalentes y usan siempre la misma ventana.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Control de flujo solo existe en enlace; control de congestión solo existe en red.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: A.</strong> Control de flujo usa rwnd para proteger al receptor individual de ser desbordado. Control de congestión usa cwnd para proteger a la red global de saturarse. Son mecanismos distintos con objetivos distintos; el emisor respeta min(rwnd, cwnd). B invierte los roles. C es falso, usan ventanas diferentes. D es falso, ambos operan en la capa de transporte.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q" data-correct="C" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">02</div>
+          <div class="quiz-text">¿Cuál es el riesgo de que se pierda un segmento de control que solo anuncia nuevos búferes disponibles, en un protocolo genérico de reserva dinámica? <span class="quiz-badge badge-transport">Transporte</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>El receptor entregará datos duplicados a la aplicación.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>La ventana de congestión se duplica indefinidamente.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Puede producirse deadlock: el emisor espera permiso y el receptor cree que ya lo otorgó.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Los números de secuencia dejan de ser acumulativos.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: C.</strong> El "grant" (otorgamiento de búferes) es un segmento de control crítico. Si se pierde, el receptor cree haber dado permiso, el emisor nunca lo recibió y espera indefinidamente → deadlock. La solución es el envío periódico del estado completo de búferes. A es el problema de duplicados retrasados (otro tema). B y D no tienen relación con la pérdida de un grant.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q" data-correct="B" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">03</div>
+          <div class="quiz-text">¿Qué indica una secuencia de ACKs duplicados en TCP? <span class="quiz-badge badge-transport">Transporte</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>Que el receptor recibió nuevos bytes en orden.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>Que llegaron segmentos posteriores, pero falta un segmento anterior que mantiene fijo el próximo byte esperado.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Que el receptor cerró la conexión.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Que el campo de ventana de recepción superó 64 KB.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: B.</strong> TCP usa ACKs acumulativos: el ACK indica el próximo byte esperado. Si llegan segmentos fuera de orden (3, 4, 5 llegan pero falta el 2), el receptor sigue enviando ACK pidiendo el byte 2. Esta secuencia de ACKs duplicados es la señal de 3 ACKs dup en Reno → Fast Retransmit sin colapso total. La red aún funciona (llegan paquetes), solo falta uno. A es lo que sucede con ACKs nuevos. C y D son incorrectos.</div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q" data-correct="C" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">04</div>
+          <div class="quiz-text">En arranque lento, RTT = 10 ms, la ventana del receptor es 24 KB y MSS = 2 KB. Sin congestión, ¿cuánto tarda en poder enviar una ventana completa? <span class="quiz-badge badge-transport">Transporte</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>20 ms.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>30 ms.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>40 ms.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>120 ms.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: C (40 ms).</strong> ventana objetivo = 24 KB / 2 KB = 12 MSS. En Slow Start la ventana se duplica cada RTT: RTT0: cwnd=1, RTT1: cwnd=2, RTT2: cwnd=4, RTT3: cwnd=8, RTT4: cwnd=16 ≥ 12 → puede enviar la ventana completa en el RTT 4. Tiempo = 4 × 10 ms = 40 ms. La respuesta A (20ms/2RTT) daría cwnd=4, insuficiente. La D sería si creciera linealmente (12 RTTs).</div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-q" data-correct="B" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">05</div>
+          <div class="quiz-text">En TCP Tahoe, cwnd = 16 MSS cuando ocurre un timeout. Incluyendo el instante posterior al timeout como RTT 0, ¿cuál es la evolución correcta de cwnd hasta RTT 5? <span class="quiz-badge badge-transport">Transporte</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>16, 8, 4, 2, 1, 1.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>1, 2, 4, 8, 9, 10.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>1, 2, 4, 8, 16, 32.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>8, 9, 10, 11, 12, 13.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: B.</strong> En TCP Tahoe ante timeout: ssthresh = cwnd/2 = 8, cwnd = 1 (RTT0). Slow Start: RTT0=1, RTT1=2, RTT2=4, RTT3=8. En RTT4 cwnd=8=ssthresh → cambia a Congestion Avoidance (lineal): RTT4=8+1=9, RTT5=9+1=10. La A sería el comportamiento de una reducción gradual (no corresponde a ningún protocolo estándar). La C no aplica ssthresh. La D asume que no hay caída al timeout.</div>
+      </div>
+
+      <!-- PARTE II -->
+      <div class="section-title" style="margin:36px 0 20px;font-size:20px;"><div class="icon">🔗</div>Parte II — Capa de Enlace</div>
+
+      <!-- Q6 -->
+      <div class="quiz-q" data-correct="D" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">06</div>
+          <div class="quiz-text">¿Cuál afirmación describe mejor el alcance de la capa de enlace de datos? <span class="quiz-badge badge-enlace">Enlace</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>Entrega datos extremo a extremo entre aplicaciones.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>Decide el camino completo entre origen y destino usando direcciones IP.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Define exclusivamente cómo representar bits como señales físicas.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Entrega tramas entre nodos adyacentes conectados por un mismo enlace.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: D.</strong> La capa de enlace opera salto a salto entre nodos directamente conectados. Su unidad es la trama. No conoce el camino completo ni los IPs de origen/destino final — eso es tarea de la capa de red. A describe la capa de transporte/aplicación. B describe la capa de red. C describe la capa física.</div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="quiz-q" data-correct="A" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">07</div>
+          <div class="quiz-text">¿Cuál es la mejor definición de piggybacking en capa de enlace? <span class="quiz-badge badge-enlace">Enlace</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>Transportar un ACK dentro de una trama de datos que viaja en sentido contrario.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>Reenviar una trama dañada inmediatamente sin esperar timeout.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Agregar bytes de relleno para alcanzar el tamaño mínimo de Ethernet.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Detectar colisiones comparando lo transmitido con lo escuchado.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: A.</strong> Piggybacking = "andar a cuestas". En lugar de enviar una trama de ACK por separado, se incluye el ACK dentro de la próxima trama de datos que va en la dirección opuesta, ahorrando overhead. B es retransmisión inmediata (no tiene nombre específico). C es padding. D es CSMA/CD.</div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="quiz-q" data-correct="C" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">08</div>
+          <div class="quiz-text">Una trama Ethernet debe tener al menos 64 bytes desde dirección destino hasta FCS/Checksum. Encabezado: destino 6 B + origen 6 B + tipo 2 B + FCS 4 B = 18 B. Los datos son 30 B. ¿Cuánto padding se necesita? <span class="quiz-badge badge-enlace">Enlace</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>0 B.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>12 B.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>16 B.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>34 B.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: C (16 B).</strong> La trama total mínima es 64 B. Tenemos: 6+6+2+4 = 18 B de encabezado/FCS + 30 B de datos = 48 B total. Faltan 64 − 48 = 16 B de padding. Esto es consistente con el campo de datos mínimo de 46 B (46 = 64 − 18), y 30 < 46, así que hay que rellenar 46 − 30 = 16 B. B es incorrecto (12 B daría solo 60 B total). D sería para 14 B de datos.</div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="quiz-q" data-correct="B" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">09</div>
+          <div class="quiz-text">En DCF (802.11): RTS + SIFS + CTS + SIFS + DATA + SIFS + ACK. Con RTS=26.7μs, CTS=18.7μs, DATA=1000μs, ACK=18.7μs y SIFS=28μs, ¿cuánto dura el diálogo? <span class="quiz-badge badge-enlace">Enlace</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>1064.1 μs.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>1148.1 μs.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>1276.1 μs.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>2424.2 μs.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: B (1148.1 μs).</strong> Suma: RTS(26.7) + SIFS(28) + CTS(18.7) + SIFS(28) + DATA(1000) + SIFS(28) + ACK(18.7) = 26.7 + 28 + 18.7 + 28 + 1000 + 28 + 18.7 = 1148.1 μs. Son 3 intervalos SIFS y 4 tramas. La A olvida un SIFS. La C o D tienen valores incorrectos.</div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="quiz-q" data-correct="D" data-answered="false">
+        <div class="quiz-q-header">
+          <div class="quiz-num">10</div>
+          <div class="quiz-text">Una red WiFi tiene dos AP conectados por una red cableada de switches; cada AP con sus propias estaciones asociadas, y ambos publican el mismo SSID. ¿Cómo se describe mejor esta organización? <span class="quiz-badge badge-enlace">Enlace</span></div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="answer(this,'A')"><span class="opt-letter">A</span>Todo el conjunto forma un único BSS porque comparten SSID.</div>
+          <div class="quiz-opt" onclick="answer(this,'B')"><span class="opt-letter">B</span>El sistema de distribución es la ventana de contención usada por DCF.</div>
+          <div class="quiz-opt" onclick="answer(this,'C')"><span class="opt-letter">C</span>Un ESS solo existe en redes ad hoc, sin AP.</div>
+          <div class="quiz-opt" onclick="answer(this,'D')"><span class="opt-letter">D</span>Cada AP con sus estaciones forma un BSS; varios BSS conectados por el sistema de distribución forman un ESS.</div>
+        </div>
+        <div class="quiz-explain"><strong>✓ Correcta: D.</strong> BSS (Basic Service Set) = un AP + sus estaciones asociadas. ESS (Extended Service Set) = múltiples BSS conectados a través del DS (Distribution System, en este caso la red cableada de switches). El SSID compartido permite la itinerancia (roaming) entre APs del mismo ESS, pero no los fusiona en un único BSS. A confunde SSID con BSS. B confunde DS con DCF. C invierte las definiciones (ESS requiere infraestructura con APs; las redes ad hoc son IBSS).</div>
+      </div>
+
     </div>
   </div>
 
 </main>
 
 <script>
+  // PAGE NAVIGATION
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    const match = document.querySelector(`.nav-item[onclick="showPage('${id}')"]`);
-    if (match) match.classList.add('active');
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+    const nav = document.querySelector(`.nav-item[onclick="showPage('${id}')"]`);
+    if (nav) nav.classList.add('active');
     window.scrollTo(0, 0);
-    // close sidebar on mobile
     if (window.innerWidth <= 1024) {
       document.getElementById('sidebar').classList.remove('open');
     }
   }
 
-  function toggleBlock(header) {
-    const block = header.parentElement;
-    block.classList.toggle('open');
-  }
-
+  // SIDEBAR TOGGLE
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
   }
 
-  // Close sidebar when clicking outside on mobile
   document.getElementById('main').addEventListener('click', function() {
     if (window.innerWidth <= 1024) {
       document.getElementById('sidebar').classList.remove('open');
     }
   });
 
-  // Open all blocks by default on first load of each page via nav
-  document.querySelectorAll('.block').forEach(block => {
-    const header = block.querySelector('.block-header');
-    if (header) header.addEventListener('click', () => toggleBlock(header));
+  // BLOCK TOGGLE — fixed: delegated via event listeners on block-headers
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.block-header').forEach(function(header) {
+      header.addEventListener('click', function() {
+        var block = this.parentElement;
+        block.classList.toggle('open');
+      });
+    });
+
+    document.querySelectorAll('.ej-header').forEach(function(header) {
+      header.addEventListener('click', function() {
+        var block = this.parentElement;
+        block.classList.toggle('open');
+      });
+    });
   });
+
+  // QUIZ
+  var score = 0;
+  var answered = 0;
+
+  function answer(optEl, chosen) {
+    var qEl = optEl.closest('.quiz-q');
+    if (qEl.dataset.answered === 'true') return;
+    qEl.dataset.answered = 'true';
+
+    var correct = qEl.dataset.correct;
+    var opts = qEl.querySelectorAll('.quiz-opt');
+    var letters = ['A','B','C','D'];
+
+    opts.forEach(function(o, i) {
+      if (letters[i] === correct) {
+        o.classList.add('revealed-correct');
+      }
+    });
+
+    if (chosen === correct) {
+      optEl.classList.add('correct');
+      score++;
+    } else {
+      optEl.classList.add('wrong');
+    }
+
+    answered++;
+    document.getElementById('scoreVal').textContent = score + ' / 10';
+
+    var explain = qEl.querySelector('.quiz-explain');
+    if (explain) explain.classList.add('visible');
+  }
+
+  function resetQuiz() {
+    score = 0;
+    answered = 0;
+    document.getElementById('scoreVal').textContent = '0 / 10';
+    document.querySelectorAll('.quiz-q').forEach(function(q) {
+      q.dataset.answered = 'false';
+      q.querySelectorAll('.quiz-opt').forEach(function(o) {
+        o.classList.remove('correct','wrong','revealed-correct');
+      });
+      var explain = q.querySelector('.quiz-explain');
+      if (explain) explain.classList.remove('visible');
+    });
+  }
 </script>
 </body>
 </html>
